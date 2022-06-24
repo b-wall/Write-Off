@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        {% block title %}
+            Write-Off
+        {% endblock %}
+    </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo&family=Poppins&display=swap" rel="stylesheet">
+    <link href="{% static 'styles.css' %}" rel="stylesheet">
+    <script src="{% static 'landingPage.js' %}" defer></script>
+</head>
+
+<body>
+    <header class="landing-header">
+        <img class="header-img" src="{% static 'assets/landing-book.avif' %}" alt="A book being read in the mountains"
+            aria-hidden=“true” decoding=“async”>
+        <div class="heading">
+            <h1>Write - Off</h1>
+            <h2>Write the book you've always dreamed of.</h2>
+            <a href="#" class="signup-btn">Sign up now</a>
+        </div>
+    </header>
+    <main>
+        <section class="content-info-container" aria-labelledby="whatwedo">
+            <div class="content">
+                <h2 id="whatwedo" class="sr-only"> How Write-Off can help you</h2>
+                <h2 id="hero-text" class="fade-in">Write-Off helps you to plan and keep track of your story <span>so you can
+                        focus on writing.</span></h2>
+                <img src="{% static 'assets/book.svg' %}" alt="girl turning a page of a book">
+                <div class="card-container">
+                    <div class="content-card fade-in">
+                        <picture>
+                            <img src="{% static 'assets/pen.svg' %}" alt="pen">
+                        </picture>
+                        <h3>Practice</h3>
+                        <p>Tackle writing prompts so you can hone your skill. Or use prompts as a warm-up before you get
+                            stuck-in.</p>
+                    </div>
+                    <div class="content-card fade-in">
+                        <picture>
+                            <img src="{% static 'assets/characters.svg' %}" alt="pen">
+                        </picture>
+                        <h3>Create Characters</h3>
+                        <p>Use Write-Off to create and keep a profile of your characters for easy reference.</p>
+                    </div>
+                    <div class="content-card fade-in">
+                        <picture>
+                            <img src="{% static 'assets/activity.svg' %}" alt="pen">
+                        </picture>
+                        <h3>Craft a Timeline</h3>
+                        <p>Create a timeline for your story so you know exactly what to write next.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="stats-container" aria-labelledby="stats-info">
+            <h2 id="stats-info">Still need convincing? Check out our stats.</h2>
+            <a href="#" class="signup-btn-bottom">Sign up for free</a>
+        </section>
+        <footer>
+            <div class="footer-content">
+                Here are the socials and contact information
+            </div>
+            <img src="{% static 'assets/reading-time.svg' %}" alt="Woman reading a book">
+            <img id="wave" src="{% static 'assets/wave.svg' %}" alt="wave" aria-hidden="true">
+        </footer>
+    </main>
+</body>
+
+</html>
