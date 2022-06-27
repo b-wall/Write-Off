@@ -30,6 +30,11 @@ def write(request):
     return render(request, "write.html", {'form': BookForm()})
 
 
+def practice(request):
+    """Allow user to practice writing"""
+    return render(request, "practice.html")
+
+
 def register(request):
     """Allow user to register an account"""
     return render(request, "register.html")

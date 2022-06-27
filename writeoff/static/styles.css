@@ -60,7 +60,7 @@ body {
 
 .sidebar ul li a:hover:not(.nav-logo) {
   letter-spacing: 0.1rem;
-  transition: letter-spacing linear 0.2s;
+  transition: letter-spacing linear 0.1s;
 }
 
 .sidebar ul li a svg {
@@ -154,7 +154,7 @@ body {
     margin-left: 96px !important;
   }
 
-  .timeline-container {
+  .content-container {
     margin-left: 96px !important;
   }
 
@@ -499,6 +499,11 @@ footer {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding-block: 1rem;
+}
+
+.card-buttons svg:hover {
+  filter: invert(30%);
 }
 
 /* Character creation page */
@@ -605,7 +610,7 @@ footer {
 
 /* Timeline View */
 
-.timeline-container {
+.content-container {
   min-height: 100vh;
   width: 100%;
   margin-left: 275px;
@@ -614,7 +619,7 @@ footer {
   flex-direction: column;
 }
 
-.timeline-container h1 {
+.content-container h1 {
   font-family: "Arvo", serif;
   margin: 1rem 0;
 }
@@ -724,7 +729,7 @@ footer {
 /* Timeline for mobile */
 
 @media screen and (max-width: 897px) {
-  .timeline-container h1 {
+  .content-container h1 {
     font-size: 1.5rem;
     text-align: center;
   }
@@ -788,26 +793,34 @@ footer {
   overflow-y: scroll;
 }
 
-.project-modal {
+[class^="icon"] {
+  display: relative;
+  height: 24px;
+}
+
+.edit-modal {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  border-radius: 5px;
+  top: -2000px;
   z-index: 1000;
   background-color: #b1b1b1;
   width: 500px;
   max-width: 80%;
+  transition: top 0.8s;
 }
 
-.project-modal.active {
-  /* TODO */
+.edit-modal.active {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: left 0s, top 0.4s;
 }
 
 .overlay {
   position: fixed;
   inset: 0;
-  /* opacity: 0; */
-  backdrop-filter: blur(3px);
+  opacity: 0;
+  backdrop-filter: blur(2px);
   z-index: 900;
   pointer-events: none;
 }
@@ -815,6 +828,7 @@ footer {
 .overlay.active {
   pointer-events: all;
   opacity: 1;
+  transition: opacity 0.4s;
 }
 
 @supports not (backdrop-filter: blur()) {
