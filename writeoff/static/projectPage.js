@@ -1,4 +1,4 @@
-// Open edit modal on click
+// Modal Functionality
 
 const addProject = document.querySelector('.add-project')
 const editBtn = document.querySelectorAll('.icon-edit')
@@ -53,3 +53,20 @@ function closeModal(modal) {
     overlay.classList.remove('active')
     modal.classList.remove('active')
 }
+
+// Progress Bar animation
+
+const progressObserver = new IntersectionObserver((obs) => {
+    obs.forEach(ob => {
+        if (ob.isIntersecting) {
+            ob.target.classList.add('active');
+            progressObserver.unobserve(ob.target);
+        }
+    })
+}, {
+    threshold: 0.3,
+})
+
+document.querySelectorAll('.progress-pill').forEach(el => {
+    progressObserver.observe(el);
+})

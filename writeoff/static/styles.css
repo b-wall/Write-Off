@@ -469,6 +469,18 @@ footer {
 .progress-pill::after {
   content: "";
   position: absolute;
+  width: 0%;
+  height: 2rem;
+  top: 0;
+  left: 0;
+  background-color: #66ca9a;
+  border-radius: 15px;
+  z-index: -1;
+}
+
+.progress-pill.active::after {
+  content: "";
+  position: absolute;
   width: 60%;
   height: 2rem;
   top: 0;
@@ -476,6 +488,7 @@ footer {
   background-color: #66ca9a;
   border-radius: 15px;
   z-index: -1;
+  transition: width 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .progress-pill progress {
