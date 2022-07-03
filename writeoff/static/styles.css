@@ -25,7 +25,8 @@ body {
   left: 0;
   padding-top: 1rem;
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: flex-start;
   transition: width ease-in-out 0.4s;
 }
@@ -43,13 +44,13 @@ body {
   padding-bottom: 1.5rem;
 }
 
-.sidebar ul li {
+.sidebar-item ul li {
   list-style: none;
   margin-bottom: 2.5rem;
   position: relative;
 }
 
-.sidebar ul li a {
+.sidebar-item ul li a {
   display: inline-block;
   text-decoration: none;
   font-size: 1.5rem;
@@ -58,17 +59,17 @@ body {
   padding-left: 1rem;
 }
 
-.sidebar ul li a:hover:not(.nav-logo) {
+.sidebar-item ul li a:hover:not(.nav-logo) {
   letter-spacing: 0.1rem;
   transition: letter-spacing linear 0.1s;
 }
 
-.sidebar ul li a svg {
+.sidebar-item ul li a svg {
   vertical-align: middle;
   margin-right: 1rem;
 }
 
-.sidebar ul li a::before {
+.sidebar-item ul li a::before {
   position: absolute;
   content: "";
   height: 40px;
@@ -91,25 +92,39 @@ body {
   display: none;
 }
 
+.sidebar-item.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+
+#logout-btn-contracted {
+  display: none;
+}
+
+.icon-tabler-logout:hover {
+  filter: invert(30%);
+}
+
 /* Sidebar collapsed */
 
 @media screen and (max-width: 1000px) {
   .sidebar {
     width: 96px;
     transition: width ease-in-out 0.4s;
-    padding-top: 6rem;
   }
 
   .nav-logo {
     display: none;
   }
 
-  .sidebar ul li {
+  .sidebar-item ul li {
     position: relative;
-    margin-bottom: 3.5rem;
+    margin-bottom: 3rem;
   }
 
-  .sidebar ul li a:hover::before {
+  .sidebar-item ul li a:hover::before {
     position: absolute;
     height: 60px;
     width: 60px;
@@ -121,7 +136,15 @@ body {
     background-color: #fff7e8;
   }
 
-  .sidebar ul li a span {
+  .sidebar-item ul li a span {
+    display: none;
+  }
+
+  #logout-btn-contracted {
+    display: block;
+  }
+
+  #logout-btn-expanded {
     display: none;
   }
 
@@ -145,7 +168,7 @@ body {
     font-family: "Arvo", serif;
   }
 
-  .sidebar ul li:hover .tooltip-text {
+  .sidebar-item ul li:hover .tooltip-text {
     visibility: visible;
     transition-delay: 0.5s;
   }
@@ -848,4 +871,195 @@ footer {
   .overlay {
     background-color: rgba(0, 0, 0, 0.5);
   }
+}
+
+/* Register Page */
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100%;
+  min-height: 100vh;
+  margin: auto;
+  text-align: center;
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.3)
+    ),
+    url(./assets/fountain-pen.avif);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.register-container header {
+  font-family: "Arvo", serif;
+  letter-spacing: 0.3rem;
+  line-height: 1.5;
+  font-size: 1.5rem;
+  color: #f4efe3;
+  text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 15px;
+}
+
+.login-form-container h2 span {
+  display: block;
+}
+
+.item-container {
+  margin-bottom: 1rem;
+  transition: all ease-in-out 0.07s;
+}
+
+.item-container input {
+  display: inline-block;
+  width: 90%;
+  height: 2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  max-width: 400px;
+  font-size: 1rem;
+  background-color: #b1b1b1;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border: none;
+}
+
+.item-container input::placeholder {
+  color: transparent;
+}
+
+.item-container input:focus {
+  outline: 3px solid #0f4b3d;
+}
+
+.item-container input:focus + .form-label,
+.item-container input:not(:placeholder-shown) + .form-label {
+  transform: translate(0.8em, -2.5em) scale(0.7);
+}
+
+.form-btn {
+  text-decoration: none;
+  color: #fff7e8;
+  background-color: #ee6b6b;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  border-radius: 3px;
+  width: 97%;
+  max-width: 400px;
+  padding: 1rem 0;
+  margin-top: 2rem;
+  border: none;
+  font-size: 1.2rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.form-btn:focus {
+  outline: 3px solid #0f4b3d;
+}
+
+.form-btn:hover {
+  background-color: #fff7e8;
+  color: #373636;
+  cursor: pointer;
+}
+
+.form-label {
+  display: block;
+  position: absolute;
+  font-size: 1.2rem;
+  transform: translate(1em, -2em);
+  transform-origin: 0 0;
+  transition: all ease-in-out 0.07s;
+  cursor: text;
+}
+
+.item-container:focus-within {
+  transform: scale(1.05, 1.05);
+}
+
+.register-container h2 {
+  color: #f4efe3;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.register-container h2 a {
+  text-decoration: underline;
+  font-family: "Arvo", serif;
+  letter-spacing: 0.1rem;
+  color: #ee6b6b;
+}
+.register-container h2 a:hover {
+  color: #f4efe3;
+}
+
+.register-container h2 a:focus {
+  outline: 3px solid #0f4b3d;
+}
+
+/* Login Page */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100%;
+  min-height: 100vh;
+  margin: auto;
+  text-align: center;
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.3)
+    ),
+    url(./assets/floating-book.avif);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.login-container header h1 {
+  font-family: "Arvo", serif;
+  letter-spacing: 0.3rem;
+  line-height: 1.5;
+  font-size: 3rem;
+  color: #ee6b6b;
+  text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.login-form-container h2 {
+  color: #373636;
+}
+
+.login-form-container h2 a {
+  display: block;
+  text-decoration: underline;
+  font-family: "Arvo", serif;
+  letter-spacing: 0.1rem;
+  color: #ee6b6b;
+}
+
+.login-form-container h2 a:hover {
+  color: #4b1980;
+}
+
+.login-ver:focus {
+  outline: 3px solid #f4efe3;
+}
+
+.login-ver input:focus {
+  outline: 3px solid #f4efe3;
+}
+
+.form-btn.login-ver {
+  margin-bottom: 6rem;
 }

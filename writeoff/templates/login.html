@@ -1,1 +1,48 @@
-This is the login page.
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        {% block title %}
+        Write-Off
+        {% endblock %}
+    </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo&family=Poppins&display=swap" rel="stylesheet">
+    <link href="{% static 'styles.css' %}" rel="stylesheet">
+    <script src="{% static 'landingPage.js' %}" defer></script>
+</head>
+
+<body>
+    <div class="login-container">
+        {% if message %}
+        <div class="message">{{ message }}</div>
+        {% endif %}
+        <header class="login-header">
+            <h1>Login</h1>
+        </header>
+        <div class="login-form-container">
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <div class="item-container login-ver">
+                    <input autofocus type="text" name="username" id="username-login" placeholder="Username">
+                    <label for="username-login" class="form-label">Username</label>
+                </div>
+                <div class="item-container login-ver">
+                    <input autofocus type="password" name="password" id="password-login" placeholder="Password">
+                    <label for="password-login" class="form-label">Password</label>
+                </div>
+                <button class="form-btn login-ver">Login</button>
+            </form>
+            <h2>No account?<a href="{% url 'register' %}" class="login-ver">Register</a></h2>
+        </div>
+    </div>
+</body>
+
+</html>
