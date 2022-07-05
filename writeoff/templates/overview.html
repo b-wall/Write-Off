@@ -1,0 +1,140 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        {% block title %}
+        Write-Off
+        {% endblock %}
+    </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo&family=Poppins&display=swap" rel="stylesheet">
+    <link href="{% static 'styles.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    {% block body %}
+    <div class="project-container">
+        <header class="project-header">
+            <div class="project-nav">
+                <div class="project-nav-title">
+                    <h1>{{project.title|title}}: Overview</h1>
+                </div>
+                <div class="project-nav-logout">
+                    <a href="{% url 'logout' %}">Logout</a>
+                </div>
+                <div class="project-nav-logout-mobile">
+                    <a href="{% url 'logout' %}"><svg xmlns="http://www.w3.org/2000/svg"
+                            class="icon icon-tabler icon-tabler-logout" width="24" height="24" viewBox="0 0 24 24"
+                            stroke-width="2.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                            <path d="M7 12h14l-3 -3m0 6l3 -3" />
+                        </svg></a>
+                </div>
+            </div>
+        </header>
+            <div class="card-container">
+                <a href="{% url 'write' project.id %}">
+                    <div class="project-card">
+                        <div class="card-title">
+                            <h3>Write</h3>
+                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-content">
+                                <p><span>Genre: </span>{{ project.genre }}</p>
+                                <p id="stats-sm"><strong>Edited: </strong>{{ project.edited|naturaltime }}</p>
+                                <p id="stats-sm"><strong>Created: </strong>{{ project.created|naturaltime }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'timeline' project.id %}">
+                    <div class="project-card">
+                        <div class="card-title">
+                            <h3>Timeline</h3>
+                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-content">
+                                <p><span>Genre: </span>{{ project.genre }}</p>
+                                <p id="stats-sm"><strong>Edited: </strong>{{ project.edited|naturaltime }}</p>
+                                <p id="stats-sm"><strong>Created: </strong>{{ project.created|naturaltime }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'characters' project.id %}">
+                    <div class="project-card">
+                        <div class="card-title">
+                            <h3>Characters</h3>
+                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-content">
+                                <p><span>Genre: </span>{{ project.genre }}</p>
+                                <p id="stats-sm"><strong>Edited: </strong>{{ project.edited|naturaltime }}</p>
+                                <p id="stats-sm"><strong>Created: </strong>{{ project.created|naturaltime }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'practice'%}">
+                    <div class="project-card">
+                        <div class="card-title">
+                            <h3>Practice</h3>
+                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-content">
+                                <p><span>Genre: </span>{{ project.genre }}</p>
+                                <p id="stats-sm"><strong>Edited: </strong>{{ project.edited|naturaltime }}</p>
+                                <p id="stats-sm"><strong>Created: </strong>{{ project.created|naturaltime }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'stats' project.id %}">
+                    <div class="project-card">
+                        <div class="card-title">
+                            <h3>Stats</h3>
+                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-content">
+                                <p><span>Genre: </span>{{ project.genre }}</p>
+                                <p id="stats-sm"><strong>Edited: </strong>{{ project.edited|naturaltime }}</p>
+                                <p id="stats-sm"><strong>Created: </strong>{{ project.created|naturaltime }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{% url 'profile' user.id %}">
+                    <div class="project-card">
+                        <div class="card-title">
+                            <h3>User</h3>
+                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-content">
+                                <p><span>Genre: </span>{{ project.genre }}</p>
+                                <p id="stats-sm"><strong>Edited: </strong>{{ project.edited|naturaltime }}</p>
+                                <p id="stats-sm"><strong>Created: </strong>{{ project.created|naturaltime }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+    </div>
+    {% endblock %}
+</body>
+
+</html>

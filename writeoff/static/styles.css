@@ -404,7 +404,115 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 100%;
   margin-bottom: 2rem;
+}
+
+.project-nav {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.project-nav-title {
+  display: flex;
+  flex: 1 0 auto;
+  justify-content: center;
+  align-items: center;
+}
+
+.project-nav-logout {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-55%);
+  text-decoration: none;
+  font-family: "Arvo", serif;
+  letter-spacing: 0.1rem;
+  color: #ee6b6b;
+}
+
+.project-nav-logout-mobile {
+  display: none;
+}
+
+.project-nav-logout a {
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-family: "Arvo", serif;
+  letter-spacing: 0.1rem;
+  color: #ee6b6b;
+}
+
+.project-nav-logout a::after {
+  position: absolute;
+  content: "";
+  height: 0.2rem;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  background: #ee6b6b;
+  z-index: 10;
+  width: 60%;
+  margin: 0 auto;
+  transition: all linear 0.3s;
+}
+
+.project-nav-logout a:hover::after {
+  width: 100%;
+}
+
+.project-nav-logout a:hover {
+  color: #777272;
+}
+
+.project-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-block: 1rem;
+}
+
+.project-form {
+  overflow: hidden;
+  max-height: 0;
+  transition: all 0.3s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.project-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-form.active {
+  overflow: hidden;
+  max-height: 147px;
+}
+
+.add-project {
+  all: unset;
+  cursor: pointer;
+  fill: #2ab251;
+  transition: all 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+.add-project.active {
+  fill: #ee6b6b;
+  transform: rotate(45deg);
+}
+
+.add-project:focus-visible,
+.add-project.active:focus-visible {
+  outline: 3px solid #0f4b3d;
+  border-radius: 5px;
+}
+
+.project-title,
+.project-genre {
+  width: 200px;
 }
 
 .project-card {
@@ -429,6 +537,8 @@ footer {
   align-items: center;
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .card-title h3 {
@@ -489,8 +599,7 @@ footer {
   z-index: -1;
 }
 
-.progress-pill::after {
-  content: "";
+.progress-bar {
   position: absolute;
   width: 0%;
   height: 2rem;
@@ -501,10 +610,9 @@ footer {
   z-index: -1;
 }
 
-.progress-pill.active::after {
-  content: "";
+.progress-bar.active {
   position: absolute;
-  width: 60%;
+  width: 0%;
   height: 2rem;
   top: 0;
   left: 0;
@@ -540,6 +648,26 @@ footer {
 
 .card-buttons svg:hover {
   filter: invert(30%);
+}
+
+/* Project Page for mobile */
+
+@media screen and (max-width: 897px) {
+  .project-nav-logout {
+    display: none;
+  }
+
+  .project-nav-logout-mobile {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-40%);
+  }
+
+  .project-nav-title {
+    font-size: 0.8rem;
+  }
 }
 
 /* Character creation page */
@@ -1061,5 +1189,7 @@ footer {
 }
 
 .form-btn.login-ver {
-  margin-bottom: 6rem;
+  margin-bottom: 11vh;
 }
+
+/* Project Overview Page */

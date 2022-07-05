@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,110 +28,76 @@
                 <button class="close-modal">CLOSE MODAL</button>
             </div>
             <header class="project-header">
-                <h1>Project Overview</h1>
-                <button aria-description="Add a project" class="add-project">+ Project</button>
+                <div class="project-nav">
+                    <div class="project-nav-title">
+                        <h1>Projects</h1>
+                    </div>
+                    <div class="project-nav-logout">
+                        <a href="{% url 'logout' %}">Logout</a>
+                    </div>
+                    <div class="project-nav-logout-mobile">
+                        <a href="{% url 'logout' %}"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout" width="24" height="24"
+                            viewBox="0 0 24 24" stroke-width="2.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                            <path d="M7 12h14l-3 -3m0 6l3 -3" />
+                        </svg></a>
+                    </div>
+                </div>
+                <div class="project-form-container">
+                    <div class="project-expand">
+                        <button aria-description="Add a project" class="add-project"><svg xmlns="http://www.w3.org/2000/svg" height="48" width="48">
+                            <path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z" />
+                        </svg></button>
+                    </div>
+                    <div class="project-form">
+                        <form action="{% url 'index' %}" method="post">
+                            {% csrf_token %}
+                            {{ form }}
+                            <button class="add-project-btn">Add</button>
+                        </form>
+                    </div>
+                </div>
             </header>
             <div class="card-container">
-                <a href="#">
-                    <div class="project-card">
-                        <div class="card-title">
-                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
-                            <h3>Lord of the Rings</h3>
-                        </div>
-                        <div class="progress-wrapper">
-                            <div class="progress-pill">
-                                <label for="book-progress">Book Progress: 60%</label>
-                                <progress id="book-progress" max="100" value="60" aria-label="60% book completion"></progress>
+                {% for project in projects %}
+                    <a href="{% url 'overview' project.id %}">
+                        <div class="project-card">
+                            <div class="card-title">
+                                <h3>{{ project.title|title }}</h3>
+                                <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
+                            </div>
+                            <div class="progress-wrapper">
+                                <div class="progress-pill">
+                                    <div class="progress-bar"></div>
+                                    <label for="book-progress">Book Progress: {{ project.progress }}%</label>
+                                    <progress id="book-progress" max="100" value="{{ project.progress }}" aria-label="{{ project.progress }}% book completion"></progress>
+                                </div>
+                            </div>
+                            <div class="card-bottom">
+                                <div class="card-content">
+                                    <p><span>Genre: </span>{{ project.genre }}</p>
+                                    <p id="stats-sm"><strong>Edited: </strong>{{ project.edited|naturaltime }}</p>
+                                    <p id="stats-sm"><strong>Created: </strong>{{ project.created|naturaltime }}</p>
+                                </div>
+                                <div class="card-buttons">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-edit" role="button" tabindex="3" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                        <path fill-rule="evenodd"
+                                            d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-delete" role="button" tabindex="4" fill="none"
+                                        viewBox="0 0 24 24" stroke="#EE6B6B" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-bottom">
-                            <div class="card-content">
-                                <p><span>Genre: </span>Fantasy</p>
-                                <p id="stats-sm">Last Edited: 2 Days Ago</p>
-                                <p id="stats-sm">Created: 11 Months Ago</p>
-                            </div>
-                            <div class="card-buttons">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-edit" role="button" tabindex="3" viewBox="0 0 20 20" fill="currentColor"> <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-delete" role="button" tabindex="4" fill="none" viewBox="0 0 24 24" stroke="#EE6B6B" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            </div>
-                        </div>
-                    </div>
-                </a>    
-                <a href="#">
-                    <div class="project-card">
-                        <div class="card-title">
-                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
-                            <h3>Lord of the Rings</h3>
-                        </div>
-                        <div class="progress-wrapper">
-                            <div class="progress-pill">
-                                <label for="book-progress">Book Progress: 60%</label>
-                                <progress id="book-progress" max="100" value="60" aria-label="60% book completion"></progress>
-                            </div>
-                        </div>
-                        <div class="card-bottom">
-                            <div class="card-content">
-                                <p><span>Genre: </span>Fantasy</p>
-                                <p id="stats-sm">Last Edited: 2 Days Ago</p>
-                                <p id="stats-sm">Created: 11 Months Ago</p>
-                            </div>
-                            <div class="card-buttons">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-edit" role="button" tabindex="3" viewBox="0 0 20 20" fill="currentColor"> <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-delete" role="button" tabindex="4" fill="none" viewBox="0 0 24 24" stroke="#EE6B6B" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            </div>
-                        </div>
-                    </div>
-                </a>    
-                <a href="#">
-                    <div class="project-card">
-                        <div class="card-title">
-                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
-                            <h3>Lord of the Rings</h3>
-                        </div>
-                        <div class="progress-wrapper">
-                            <div class="progress-pill">
-                                <label for="book-progress">Book Progress: 60%</label>
-                                <progress id="book-progress" max="100" value="60" aria-label="60% book completion"></progress>
-                            </div>
-                        </div>
-                        <div class="card-bottom">
-                            <div class="card-content">
-                                <p><span>Genre: </span>Fantasy</p>
-                                <p id="stats-sm">Last Edited: 2 Days Ago</p>
-                                <p id="stats-sm">Created: 11 Months Ago</p>
-                            </div>
-                            <div class="card-buttons">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-edit" role="button" tabindex="3" viewBox="0 0 20 20" fill="currentColor"> <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-delete" role="button" tabindex="4" fill="none" viewBox="0 0 24 24" stroke="#EE6B6B" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            </div>
-                        </div>
-                    </div>
-                </a>    
-                <a href="#">
-                    <div class="project-card">
-                        <div class="card-title">
-                            <img src="{% static 'assets/book-open.svg'%}" alt="open book icon">
-                            <h3>Lord of the Rings</h3>
-                        </div>
-                        <div class="progress-wrapper">
-                            <div class="progress-pill">
-                                <label for="book-progress">Book Progress: 60%</label>
-                                <progress id="book-progress" max="100" value="60" aria-label="60% book completion"></progress>
-                            </div>
-                        </div>
-                        <div class="card-bottom">
-                            <div class="card-content">
-                                <p><span>Genre: </span>Fantasy</p>
-                                <p id="stats-sm">Last Edited: 2 Days Ago</p>
-                                <p id="stats-sm">Created: 11 Months Ago</p>
-                            </div>
-                            <div class="card-buttons">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-edit" role="button" tabindex="3" viewBox="0 0 20 20" fill="currentColor"> <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-delete" role="button" tabindex="4" fill="none" viewBox="0 0 24 24" stroke="#EE6B6B" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            </div>
-                        </div>
-                    </div>
-                </a>    
+                    </a>
+                {% endfor %}
             </div>
         </div>
     {% endblock %}

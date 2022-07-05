@@ -5,38 +5,79 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from .forms import BookForm
-from .models import User
+from .forms import BookForm, ProjectForm
+from .models import Character, User, Project
 
 
 # @login_required
 def index(request):
-    """Display Project Overview"""
-    return render(request, "index.html")
+    """Display Project List"""
+    if request.method == "POST":
+        newProject = ProjectForm(request.POST)
+        if newProject.is_valid():
+            validProject = newProject.save(commit=False)
+            validProject.author = request.user
+            validProject.save()
+            return HttpResponseRedirect(reverse("index"))
+
+    projects = Project.objects.filter(author=request.user)
+
+    for project in projects:
+        # Check if project has been completed
+        if project.progress() == 100:
+            project.completed = True
+            project.save()
+
+        if project.completed == True:
+            if project.progress() < 100:
+                project.completed = False
+                project.save()
+
+    return render(request, "index.html", {
+        'form': ProjectForm(),
+        'projects': projects
+    })
 
 
 def landingpage(request):
     """Display landing page"""
     return render(request, "landing.html")
 
+
+def overview(request, id):
+
+    project = Project.objects.get(pk=id)
+
+    return render(request, "overview.html", {
+        'project': project
+    })
+
 # @login_required
 
 
-def characters(request):
+def characters(request, id):
     """Display Character Page"""
-    return render(request, "characters.html")
+    project = Project.objects.get(pk=id)
+    characters = Character.objects.filter(project__id=id)
+    return render(request, "characters.html", {
+        'project': project,
+        'characters': characters
+    })
 
 # @login_required
 
 
-def timeline(request):
+def timeline(request, id):
     """Display Timeline View"""
-    return render(request, "timeline.html")
+    project = Project.objects.get(pk=id)
+    return render(request, "timeline.html", {
+        'project': project
+    })
 
 # @login_required
 
 
-def write(request):
+def write(request, id):
     """Display page to write content"""
     return render(request, "write.html", {'form': BookForm()})
 
@@ -46,6 +87,20 @@ def write(request):
 def practice(request):
     """Allow user to practice writing"""
     return render(request, "practice.html")
+
+
+def user_profile(request, uid):
+    """View user profile page"""
+    return render(request, "userprofile.html")
+
+
+def stats(request, id):
+    """View project stats"""
+
+    project = Project.objects.get(pk=id)
+    return render(request, "stats.html", {
+        'project': project
+    })
 
 
 def register(request):

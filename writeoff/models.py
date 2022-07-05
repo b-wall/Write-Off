@@ -27,6 +27,14 @@ class Project(models.Model):
     edited = models.DateTimeField(auto_now=True)
     completed = models.BooleanField(default=False)
 
+    def progress(self):
+        try:
+            totalEvents = self.timeline.all().count()
+            completedEvents = self.timeline.filter(completed=True).count()
+            return round((completedEvents/totalEvents)*100)
+        except (AttributeError, ZeroDivisionError):
+            return 0
+
     def __str__(self):
         return self.title
 
@@ -38,15 +46,15 @@ class Character(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, related_name="character")
     name = models.CharField(max_length=50)
-    age = models.IntegerField(blank=True)
+    age = models.IntegerField(blank=True, null=True)
     personality = models.TextField(blank=True)
-    Appearance = models.TextField(blank=True)
-    Affiliations = models.ManyToManyField(
+    appearance = models.TextField(blank=True)
+    affiliations = models.ManyToManyField(
         'self', blank=True, symmetrical=True)
-    Other = models.TextField(blank=True)
+    other = models.TextField(blank=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.project} | {self.name}"
 
     class Meta:
         ordering = ['name']
@@ -61,6 +69,7 @@ class TimelineItem(models.Model):
     column_id = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
     time = models.CharField(max_length=30, blank=True)
+    completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return f"{self.project} | {self.title}"

@@ -1,16 +1,18 @@
-// Modal Functionality
-
 const addProject = document.querySelector('.add-project')
 const editBtn = document.querySelectorAll('.icon-edit')
 const deleteBtn = document.querySelectorAll('.icon-delete')
 const closeBtn = document.querySelectorAll('.close-modal')
 const overlay = document.querySelector('.overlay')
 
+// Collapsible Form
+
 addProject.addEventListener('click', () => {
-    const modal = document.querySelector('.edit-modal')
-    modal.insertAdjacentHTML("beforeend", 'ADD A NEW PROJECT')
-    openModal(modal)
+    projectForm = document.querySelector('.project-form')
+    addProject.classList.toggle('active')
+    projectForm.classList.toggle('active')
 });
+
+// Modal Functionality
 
 editBtn.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -58,8 +60,10 @@ function closeModal(modal) {
 
 const progressObserver = new IntersectionObserver((obs) => {
     obs.forEach(ob => {
+        percentage = ob.target.nextElementSibling.nextElementSibling.value + '%'
         if (ob.isIntersecting) {
             ob.target.classList.add('active');
+            ob.target.style.width = percentage
             progressObserver.unobserve(ob.target);
         }
     })
@@ -67,6 +71,6 @@ const progressObserver = new IntersectionObserver((obs) => {
     threshold: 0.3,
 })
 
-document.querySelectorAll('.progress-pill').forEach(el => {
+document.querySelectorAll('.progress-bar').forEach(el => {
     progressObserver.observe(el);
 })
