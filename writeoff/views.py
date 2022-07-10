@@ -4,9 +4,10 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 from .forms import BookForm, ProjectForm
-from .models import Character, User, Project
+from .models import Character, User, Project, TimelineItem
 
 
 # @login_required
@@ -44,9 +45,14 @@ def landingpage(request):
     return render(request, "landing.html")
 
 
-def overview(request, id):
-
-    project = Project.objects.get(pk=id)
+def overview(request, slug=None):
+    """Display Overview Page for Project"""
+    project = None
+    if slug is not None:
+        try:
+            project = Project.objects.get(slug=slug)
+        except:
+            raise Http404
 
     return render(request, "overview.html", {
         'project': project
@@ -55,10 +61,15 @@ def overview(request, id):
 # @login_required
 
 
-def characters(request, id):
+def characters(request, slug=None):
     """Display Character Page"""
-    project = Project.objects.get(pk=id)
-    characters = Character.objects.filter(project__id=id)
+    project = None
+    if slug is not None:
+        try:
+            project = Project.objects.get(slug=slug)
+            characters = Character.objects.filter(project__slug=slug)
+        except:
+            raise Http404
     return render(request, "characters.html", {
         'project': project,
         'characters': characters
@@ -67,37 +78,47 @@ def characters(request, id):
 # @login_required
 
 
-def timeline(request, id):
+def timeline(request, slug=None):
     """Display Timeline View"""
-    project = Project.objects.get(pk=id)
+    project = None
+    if slug is not None:
+        try:
+            project = Project.objects.get(slug=slug)
+            timelineItems = TimelineItem.objects.filter(project__slug=slug)
+        except:
+            raise Http404
+
     return render(request, "timeline.html", {
-        'project': project
+        'project': project,
+        'timelineItems': timelineItems
     })
 
 # @login_required
 
 
-def write(request, id):
+def write(request, slug):
     """Display page to write content"""
-    return render(request, "write.html", {'form': BookForm()})
+    project = Project.objects.get(slug=slug)
+    return render(request, "write.html", {'form': BookForm(), 'project': project})
 
 # @login_required
 
 
 def practice(request):
     """Allow user to practice writing"""
-    return render(request, "practice.html")
+    return render(request, "practice.html", {
+    })
 
 
-def user_profile(request, uid):
+def user_profile(request, uname):
     """View user profile page"""
     return render(request, "userprofile.html")
 
 
-def stats(request, id):
+def stats(request, slug):
     """View project stats"""
 
-    project = Project.objects.get(pk=id)
+    project = Project.objects.get(slug=slug)
     return render(request, "stats.html", {
         'project': project
     })

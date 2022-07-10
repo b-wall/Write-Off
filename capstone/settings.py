@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django.contrib.humanize',
     'writeoff',
+    'rest_framework',
+    'django.contrib.humanize',
     'django_quill',
 ]
 

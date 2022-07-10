@@ -1,8 +1,7 @@
-{% extends "layout.html" %}
 {% load static %}
 
 {% block body %}
-This is the user profile page.
+This is the user profile page for
 {{user.username}}
-{{user.username.id}}
+(id: {{user.id}})
 {% endblock %}

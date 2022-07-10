@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models.signals import pre_save, post_save
+
+from .utils import slugifyProjectTitle
 
 
 class User(AbstractUser):
@@ -21,6 +24,7 @@ class Project(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="creator")
     title = models.CharField(max_length=60)
+    slug = models.SlugField(unique=True, blank=True, null=True)
     genre = models.ForeignKey(
         Genre, on_delete=models.CASCADE, related_name="project")
     created = models.DateTimeField(auto_now_add=True)
@@ -73,3 +77,40 @@ class TimelineItem(models.Model):
 
     def __str__(self):
         return f"{self.project} | {self.title}"
+
+
+# Create Slug Uniquely on Save
+
+
+def projectPreSave(sender, instance, *args, **kwargs):
+    if instance.slug is None:
+        slugifyProjectTitle(instance, save=False)
+
+
+pre_save.connect(projectPreSave, sender=Project)
+
+
+def projectPostSave(sender, instance, created, *args, **kwargs):
+    if created:
+        slugifyProjectTitle(instance, save=True)
+
+
+post_save.connect(projectPostSave, sender=Project)
+
+
+# Refresh edited project's edited status on Save
+
+def characterPreSave(sender, instance, *args, **kwargs):
+    project = Project.objects.get(id=instance.project.id)
+    project.save()
+
+
+pre_save.connect(characterPreSave, sender=Character)
+
+
+def TimelineItemPreSave(sender, instance, *args, **kwargs):
+    project = Project.objects.get(id=instance.project.id)
+    project.save()
+
+
+pre_save.connect(TimelineItemPreSave, sender=TimelineItem)

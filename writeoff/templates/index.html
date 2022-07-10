@@ -61,7 +61,7 @@
             </header>
             <div class="card-container">
                 {% for project in projects %}
-                    <a href="{% url 'overview' project.id %}">
+                    <a href="{% url 'overview' project.slug %}">
                         <div class="project-card">
                             <div class="card-title">
                                 <h3>{{ project.title|title }}</h3>

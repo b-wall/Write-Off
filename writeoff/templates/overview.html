@@ -42,7 +42,7 @@
             </div>
         </header>
             <div class="card-container">
-                <a href="{% url 'write' project.id %}">
+                <a href="{% url 'write' project.slug %}">
                     <div class="project-card">
                         <div class="card-title">
                             <h3>Write</h3>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="{% url 'timeline' project.id %}">
+                <a href="{% url 'timeline' project.slug %}">
                     <div class="project-card">
                         <div class="card-title">
                             <h3>Timeline</h3>
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="{% url 'characters' project.id %}">
+                <a href="{% url 'characters' project.slug %}">
                     <div class="project-card">
                         <div class="card-title">
                             <h3>Characters</h3>
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="{% url 'stats' project.id %}">
+                <a href="{% url 'stats' project.slug %}">
                     <div class="project-card">
                         <div class="card-title">
                             <h3>Stats</h3>
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                 </a>
-                <a href="{% url 'profile' user.id %}">
+                <a href="{% url 'profile' user.username %}">
                     <div class="project-card">
                         <div class="card-title">
                             <h3>User</h3>

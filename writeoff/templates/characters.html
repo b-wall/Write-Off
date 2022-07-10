@@ -59,7 +59,9 @@
                         <h3>Appearance</h3>
                         <p>{{ character.appearance }}</p>
                         <h3>Affiliations</h3>
-                        <p>{{ character.affiliations.all }}</p>
+                            {% for affiliation in character.affiliations.all %}
+                                {{ affiliation.name }}
+                            {% endfor %}
                         <h3>Other</h3>
                         <p>{{ character.other }}</p>
                     </div>
