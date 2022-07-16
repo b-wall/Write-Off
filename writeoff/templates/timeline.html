@@ -1,46 +1,16 @@
 {% extends "layout.html" %}
 {% load static %}
+{% block page_scripts %}<script src="{% static 'timelineItemPage.js' %}" type="module" defer></script>{% endblock %}
 
 {% block body %}
 <div class="content-container">
-    <h1>Timeline - Lord of the Rings</h1>
+    <h1>Timeline - ADD DYNAMICALLY</h1>
     <div class="column-container">
         <div class="column">
-            <div class="column-title">Beginning</div>
+            <div class="column-title"></div>
             <div class="column-items">
-                    <div class="dropzone"></div>
-                {% for item in timelineItems %}
-                    {% if item.column_id == 1 %}
-                        <div contenteditable class="column-item-input">{{ item.title }}</div>
-                        <div class="dropzone"></div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-            <button class="add-item" type="button">+ Add</button>
-        </div>
-        <div class="column">
-            <div class="column-title">Middle</div>
-            <div class="column-items">
+                <div contenteditable class="column-item-input"></div>
                 <div class="dropzone"></div>
-                {% for item in timelineItems %}
-                    {% if item.column_id == 2 %}
-                        <div contenteditable class="column-item-input">{{ item.title }}</div>
-                        <div class="dropzone"></div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-            <button class="add-item" type="button">+ Add</button>
-        </div>
-        <div class="column">
-            <div class="column-title">End</div>
-            <div class="column-items">
-                <div class="dropzone"></div>
-                {% for item in timelineItems %}
-                    {% if item.column_id == 3 %}
-                        <div contenteditable class="column-item-input">{{ item.title }}</div>
-                        <div class="dropzone"></div>
-                    {% endif %}
-                {% endfor %}
             </div>
             <button class="add-item" type="button">+ Add</button>
         </div>

@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
 from .forms import BookForm, ProjectForm
-from .models import Character, User, Project, TimelineItem
+from .models import Character, User, Project, TimelineItem, Genre
 
 
 # @login_required
@@ -22,6 +22,7 @@ def index(request):
             return HttpResponseRedirect(reverse("index"))
 
     projects = Project.objects.filter(author=request.user)
+    genres = Genre.objects.all()
 
     for project in projects:
         # Check if project has been completed
@@ -36,7 +37,8 @@ def index(request):
 
     return render(request, "index.html", {
         'form': ProjectForm(),
-        'projects': projects
+        'projects': projects,
+        'genres': genres
     })
 
 

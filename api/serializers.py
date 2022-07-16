@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from writeoff.models import Project, Character
+from writeoff.models import Project, Character, TimelineItem
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -11,4 +11,10 @@ class ProjectSerializer(serializers.ModelSerializer):
 class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Character
+        fields = '__all__'
+
+
+class TimelineItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimelineItem
         fields = '__all__'

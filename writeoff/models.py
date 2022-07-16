@@ -70,7 +70,7 @@ class TimelineItem(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True)
     characters = models.ManyToManyField(Character, blank=True)
-    column_id = models.PositiveIntegerField(
+    columnId = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
     time = models.CharField(max_length=30, blank=True)
     completed = models.BooleanField(default=False)
@@ -79,7 +79,7 @@ class TimelineItem(models.Model):
         return f"{self.project} | {self.title}"
 
 
-# Create Slug Uniquely on Save
+# Create Unique Slug on Save
 
 
 def projectPreSave(sender, instance, *args, **kwargs):
