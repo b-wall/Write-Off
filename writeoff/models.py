@@ -67,16 +67,19 @@ class Character(models.Model):
 class TimelineItem(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, related_name="timeline")
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, blank=True)
     content = models.TextField(blank=True)
     characters = models.ManyToManyField(Character, blank=True)
     columnId = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
+    beginningOrder = models.PositiveIntegerField(null=True, blank=True)
+    middleOrder = models.PositiveIntegerField(null=True, blank=True)
+    endOrder = models.PositiveIntegerField(null=True, blank=True)
     time = models.CharField(max_length=30, blank=True)
     completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.project} | {self.title}"
+        return f"{self.project} | {self.title} | {self.beginningOrder} | {self.middleOrder} | {self.endOrder}"
 
 
 # Create Unique Slug on Save

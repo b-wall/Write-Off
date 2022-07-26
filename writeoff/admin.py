@@ -8,8 +8,14 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ['id', 'title']
 
 
+class TimelineItemAdmin(admin.ModelAdmin):
+    list_display = ['columnId', 'id',  'title',
+                    'beginningOrder', 'middleOrder', 'endOrder']
+    search_fields = ['id', 'title']
+
+
 admin.site.register(User)
 admin.site.register(Genre)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Character)
-admin.site.register(TimelineItem)
+admin.site.register(TimelineItem, TimelineItemAdmin)

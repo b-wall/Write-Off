@@ -16,3 +16,15 @@ def slugifyProjectTitle(instance, save=False, newSlug=None):
     instance.slug = slug
     if save:
         instance.save()
+
+
+def order(cid, object, currentOrder):
+    if cid == 1:
+        object.beginningOrder = currentOrder
+    elif cid == 2:
+        object.middleOrder = currentOrder
+    else:
+        object.endOrder = currentOrder
+
+    object.save()
+    return object

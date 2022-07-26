@@ -1,11 +1,11 @@
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from writeoff.models import Project, Character, Genre, TimelineItem
 from .serializers import ProjectSerializer, CharacterSerializer, TimelineItemSerializer
 from django.utils.text import slugify
-from writeoff.utils import slugifyProjectTitle
+from writeoff.utils import order
 import random
 
 
@@ -96,12 +96,20 @@ def createCharacter(request):
 # Timeline Model API
 
 @api_view(['GET'])
-def getTimelineItems(request, slug):
+def getTimelineItems(request, slug, cid):
     try:
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    timelineItems = TimelineItem.objects.filter(project=project)
+    if cid == 1:
+        timelineItems = TimelineItem.objects.filter(
+            project=project).filter(columnId=cid).order_by('beginningOrder')
+    elif cid == 2:
+        timelineItems = TimelineItem.objects.filter(
+            project=project).filter(columnId=cid).order_by('middleOrder')
+    else:
+        timelineItems = TimelineItem.objects.filter(
+            project=project).filter(columnId=cid).order_by('endOrder')
     serializer = TimelineItemSerializer(timelineItems, many=True)
     return Response(serializer.data)
 
@@ -132,9 +140,23 @@ def updateTimelineItem(request, slug, id):
         instance=timelineItem, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        cid = serializer.initial_data['columnId']
+        orderedIds = serializer.initial_data['items'].split(',')
+        with transaction.atomic():
+            currentOrder = 1
+            for orderedId in orderedIds:
+                object = TimelineItem.objects.get(pk=orderedId)
+                order(cid,
+                      object, currentOrder)
+                currentOrder += 1
+            data = {}
+            data['success'] = 'Changed order'
+            return Response(data=data)
+    except KeyError:
         return Response(serializer.data)
-
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -143,9 +165,20 @@ def createTimelineItem(request, slug):
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
     timelineItem = TimelineItem(project=project)
 
     serializer = TimelineItemSerializer(timelineItem, data=request.data)
+    if serializer.initial_data['position']:
+        cid = serializer.initial_data['columnId']
+        timelineCount = TimelineItem.objects.filter(
+            project=project).filter(columnId=cid).count()
+        if cid == '1':
+            serializer.initial_data['beginningOrder'] = int(timelineCount + 1)
+        elif cid == '2':
+            serializer.initial_data['middleOrder'] = int(timelineCount + 1)
+        else:
+            serializer.initial_data['endOrder'] = int(timelineCount + 1)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)

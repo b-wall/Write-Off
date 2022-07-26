@@ -18,3 +18,4 @@ class TimelineItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimelineItem
         fields = '__all__'
+        extra_kwargs = {'project': {'required': False}}
