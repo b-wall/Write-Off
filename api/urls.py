@@ -10,6 +10,10 @@ urlpatterns = [
     path("project/timeline/<slug:slug>/edit/<int:id>/", views.updateTimelineItem),
     path("project/timeline/<slug:slug>/create/", views.createTimelineItem),
     path("project/timeline/<slug:slug>/delete/<int:id>/", views.deleteTimelineItem),
-    path("characters/<slug:slug>/", views.getCharacters),
-    path("characters/<slug:slug>/create/", views.createCharacter),
+    path("project/timeline/characters/<slug:slug>/<int:id>/",
+         views.getTimelineCharacters),
+    path("project/timeline/<slug:slug>/edit/detailed/<int:id>/",
+         views.updateTimelineItemDetailed),
+    path("project/timeline/<slug:slug>/edit/characters/<int:id>/",
+         views.handleCharacterSelected),
 ]

@@ -31,7 +31,7 @@ export default class Dropzone {
             const item = document.querySelector(`[data-id="${itemId}"]`);
             const slug = document.querySelector('.timeline-title').dataset.slug
             const insertAfter = dropzone.parentElement.classList.contains('droppable-item') ? dropzone.parentElement : dropzone;
-            const title = item.firstElementChild.firstElementChild.textContent
+            const title = item.firstElementChild.firstElementChild.textContent;
             if (item.contains(dropzone)) {
                 return
             }

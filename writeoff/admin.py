@@ -9,7 +9,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class TimelineItemAdmin(admin.ModelAdmin):
-    list_display = ['columnId', 'id',  'title',
+    list_display = ['title', 'id', 'columnId',
                     'beginningOrder', 'middleOrder', 'endOrder']
     search_fields = ['id', 'title']
 

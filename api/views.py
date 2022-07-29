@@ -70,28 +70,6 @@ def deleteProject(request, slug):
 
     return Response(data=data)
 
-# Character Model API
-
-
-@api_view(['GET'])
-def getCharacters(request, slug):
-    try:
-        project = Project.objects.get(slug=slug)
-    except Project.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    characters = Character.objects.filter(project=project)
-    serializer = CharacterSerializer(characters, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['POST'])
-def createCharacter(request):
-    serializer = CharacterSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
-
 
 # Timeline Model API
 
@@ -201,3 +179,85 @@ def deleteTimelineItem(request, slug, id):
         data['failure'] = 'Timeline Item failed to delete'
 
     return Response(data=data)
+
+
+@api_view(['GET'])
+def getTimelineCharacters(request, slug, id):
+    try:
+        project = Project.objects.get(slug=slug)
+    except Project.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    projectCharacters = Character.objects.filter(project=project)
+    timelineItem = TimelineItem.objects.filter(
+        project=project).filter(pk=id)
+
+    selectedSeralizableCharacters = [
+        item.characters.all() for item in timelineItem]
+
+    selectedCharacters = [item.characters.values_list('name', flat=True)
+                          for item in timelineItem]
+    selectCharacters = projectCharacters.exclude(
+        name__in=selectedCharacters[0])
+
+    timelineItemSerializer = TimelineItemSerializer(timelineItem, many=True)
+    selectCharacterSerializer = CharacterSerializer(
+        selectCharacters, many=True)
+    selectedCharacterSerializer = CharacterSerializer(
+        selectedSeralizableCharacters[0], many=True)
+    serializerList = [selectCharacterSerializer.data,
+                      selectedCharacterSerializer.data,
+                      timelineItemSerializer.data]
+
+    content = {
+        'status': 1,
+        'responseCode': status.HTTP_200_OK,
+        'data': serializerList,
+    }
+
+    return Response(content)
+
+
+@api_view(['PUT'])
+def handleCharacterSelected(request, slug, id):
+    try:
+        character = Character.objects.get(pk=id)
+    except Character.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    serializer = TimelineItemSerializer(
+        instance=character, data=request.data, partial=True)
+    try:
+        timelineItem = TimelineItem.objects.get(
+            pk=serializer.initial_data['timelineId'])
+    except TimelineItem.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if serializer.initial_data['deleted']:
+        timelineItem.characters.remove(character)
+    else:
+        timelineItem.characters.add(character)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT'])
+def updateTimelineItemDetailed(request, slug, id):
+    try:
+        project = Project.objects.get(slug=slug)
+    except Project.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    timelineItem = TimelineItem.objects.filter(
+        project=project).filter(pk=id)[0]
+    serializer = TimelineItemSerializer(
+        instance=timelineItem, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

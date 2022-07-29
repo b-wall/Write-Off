@@ -18,6 +18,28 @@ document.querySelectorAll('.add-item').forEach(item => {
     });
 });
 
+// Save/Cancel Edited Timeline Detailed Data
+
+document.querySelector('#submit-timeline-update').addEventListener('click', (e) => {
+    e.preventDefault();
+    const tid = document.querySelector('#timeline-title').dataset.tid;
+    TimelineAPI.updateTimelineDetailed(slug, tid);
+    const modals = document.querySelectorAll('.timeline-modal.active');
+    modals.forEach(modal => {
+        Modal.closeModal(modal);
+    })    
+});
+
+document.querySelector('#close-timeline-modal').addEventListener('click', (e) => {
+    e.preventDefault();
+    const modals = document.querySelectorAll('.timeline-modal.active');
+    modals.forEach(modal => {
+        Modal.closeModal(modal);
+    })
+});
+
+
+
 // Popup Functionality
 
 const overlay = document.querySelector('.overlay')
@@ -25,7 +47,7 @@ const overlay = document.querySelector('.overlay')
 overlay.addEventListener('click', () => {
     const modals = document.querySelectorAll('.timeline-modal.active')
     modals.forEach(modal => {
-        Modal.closeModal(modal)
+        Modal.closeModal(modal);
     })
 });
 
@@ -137,8 +159,7 @@ function scrollX(element, direction, speed, distance, step) {
 };
 
 function detectBounds(element, location) {
-    console.log(`current scroll value: ${element.scrollLeft}`)
-    if ((element.scrollLeft + element.offsetWidth) >= element.scrollWidth) {
+    if (Math.ceil((element.scrollLeft + element.offsetWidth)) >= element.scrollWidth) {
         element.classList.add(`at-end-${location}`)
     }
     else {

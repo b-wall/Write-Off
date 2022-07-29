@@ -19,9 +19,9 @@ export default class Item {
         this.elements.root.appendChild(lowerDropzone);
 
         this.elements.editBtn.addEventListener('click', () => {
-            TimelineAPI.getTimelineItem(this.slug, id)
-            Modal.openModal(modal)
-        })
+            TimelineAPI.getTimelineEditData(this.slug, id);
+            Modal.openModal(modal);
+        });
 
         const onBlur = () => {
             const newTitle = this.elements.input.textContent.trim();

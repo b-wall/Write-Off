@@ -537,7 +537,7 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -802,8 +802,10 @@ footer {
   background-color: #f4f2f0;
   width: 700px;
   max-width: 70%;
+  height: 80%;
   transition: top 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  overflow-y: auto;
 }
 
 .timeline-modal.active {
@@ -818,7 +820,7 @@ footer {
   flex-direction: column;
   justify-content: space-between;
   width: 90%;
-  height: 500px;
+  height: 100%;
   padding: 1rem;
 }
 
@@ -1117,7 +1119,7 @@ footer {
   background-color: transparent;
   font-family: "Poppins", sans-serif;
   outline: none;
-  cursor: pointer;
+  cursor: auto;
   color: #fff7e8;
   border: none;
   font-size: 1rem;
@@ -1135,6 +1137,10 @@ footer {
   cursor: pointer;
   fill: #fff7e8;
   transform: scale(0.7);
+}
+
+.character-pill-selected-remove:hover {
+  filter: invert(0.2);
 }
 
 .content-container h1 {

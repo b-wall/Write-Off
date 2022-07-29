@@ -58,7 +58,7 @@ class Character(models.Model):
     other = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.project} | {self.name}"
+        return f"{self.name} | {self.project}"
 
     class Meta:
         ordering = ['name']
@@ -69,7 +69,8 @@ class TimelineItem(models.Model):
         Project, on_delete=models.CASCADE, related_name="timeline")
     title = models.CharField(max_length=100, blank=True)
     content = models.TextField(blank=True)
-    characters = models.ManyToManyField(Character, blank=True)
+    characters = models.ManyToManyField(
+        Character, blank=True, related_name="timelineCharacter")
     columnId = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
     beginningOrder = models.PositiveIntegerField(null=True, blank=True)
