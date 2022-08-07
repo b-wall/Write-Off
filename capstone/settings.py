@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'writeoff',
     'rest_framework',
     'django.contrib.humanize',
-    'django_quill',
 ]
 
 MIDDLEWARE = [
@@ -73,32 +72,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'capstone.wsgi.application'
-
-# Configuration for Quill
-
-QUILL_CONFIGS = {
-    'default': {
-        'theme': 'snow',
-        'modules': {
-            'syntax': True,
-            'toolbar': [
-                [
-                    {'font': []},
-                    {'header': []},
-                    {'align': []},
-                    'bold', 'italic', 'underline', 'strike', 'blockquote',
-                    {'color': []},
-                    {'background': []},
-                ],
-                ['code-block', 'link'],
-                ['clean'],
-            ]
-        },
-        'placeholder': '“The scariest moment is always just before you start. After that, things can only get better. - Stephen King” ',
-        'scrollingContainer': True,
-    }
-}
-
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

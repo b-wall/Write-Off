@@ -27,6 +27,7 @@ class Project(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
     genre = models.ForeignKey(
         Genre, on_delete=models.CASCADE, related_name="project")
+    content = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     completed = models.BooleanField(default=False)
@@ -58,7 +59,7 @@ class Character(models.Model):
     other = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.name} | {self.project}"
+        return self.name
 
     class Meta:
         ordering = ['name']

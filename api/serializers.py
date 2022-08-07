@@ -18,6 +18,13 @@ class TimelineItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimelineItem
-        fields = 'project', 'id', 'title', 'columnId', 'content', 'time', 'completed', 'beginningOrder', 'middleOrder', 'endOrder', 'characters'
+        fields = ['project', 'id', 'title', 'columnId', 'content', 'time',
+                  'completed', 'beginningOrder', 'middleOrder', 'endOrder', 'characters']
         extra_kwargs = {'project': {'required': False}}
         depth = 1
+
+
+class ProjectContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ["content"]

@@ -16,4 +16,6 @@ urlpatterns = [
          views.updateTimelineItemDetailed),
     path("project/timeline/<slug:slug>/edit/characters/<int:id>/",
          views.handleCharacterSelected),
+    path("project/write/<slug:slug>/book/", views.getBook),
+    path("project/write/<slug:slug>/book/edit/", views.editBook)
 ]

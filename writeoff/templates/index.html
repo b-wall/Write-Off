@@ -25,26 +25,20 @@
         <div class="project-container">
             <div class="overlay"></div>
             <div class="edit-modal">
-                <button id="close-modal">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48">
-                    <path
-                        d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z" />
-                    </svg>
-                </button>
-                <label for="update-project-title">Title</label>
-                <input type="text" id="project-title-input">
-                <label for="update-genre">Genre</label>
-                <input type="text" id="project-genre-input" list="genre-list">
-                <datalist id="genre-list">
-                    {% for genre in genres %}
-                      <option id="{{ genre.name }}" data-genre-id="{{ genre.id }}">{{ genre.name }}</option>
-                    {% endfor %}
-                </datalist>
-                <button id="submit-project-update">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48">
-                        <path d="M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z" />
-                    </svg>
-                </button>
+                <div class="project-edit-input">
+                    <label for="update-project-title">Title: </label>
+                    <input type="text" id="project-title-input" class="project-title">
+                    <label for="update-genre">Genre: </label>
+                    <select id="update-genre" class="project-genre">
+                        {% for genre in genres %}
+                        <option id="{{ genre.name }}" data-genre-id="{{ genre.id }}">{{ genre.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="project-edit-btns">
+                    <button id="close-modal"class="form-btn timeline-form-btn">CANCEL</button>
+                    <button id="submit-project-update" class="form-btn timeline-form-btn">SAVE</button>
+                </div>
             </div>
             <header class="project-header">
                 <div class="project-nav">
@@ -69,13 +63,11 @@
                             <path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z" />
                         </svg></button>
                     </div>
-                    <div class="project-form">
-                        <form action="{% url 'index' %}" method="post">
+                        <form action="{% url 'index' %}" method="post" class="project-form">
                             {% csrf_token %}
                             {{ form }}
                             <button class="add-project-btn">Add</button>
                         </form>
-                    </div>
                 </div>
             </header>
             <div class="card-container">
@@ -100,7 +92,7 @@
                                     <p id="stats-sm"><strong>Created: </strong>{{ project.created|naturaltime }}</p>
                                 </div>
                                 <div class="card-buttons">
-                                    <button id="edit-project-btn">
+                                    <button id="edit-project-btn" class="btn">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-edit" role="button" viewBox="0 0 20 20"
                                             fill="currentColor">
                                             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
@@ -109,7 +101,7 @@
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </button>
-                                    <button id="delete-project-btn">
+                                    <button id="delete-project-btn" class="btn">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-delete" role="button" fill="none"
                                             viewBox="0 0 24 24" stroke="#EE6B6B" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"

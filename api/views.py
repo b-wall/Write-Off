@@ -1,9 +1,10 @@
+from functools import partial
 from django.db import IntegrityError, transaction
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from writeoff.models import Project, Character, Genre, TimelineItem
-from .serializers import ProjectSerializer, CharacterSerializer, TimelineItemSerializer
+from .serializers import ProjectContentSerializer, ProjectSerializer, CharacterSerializer, TimelineItemSerializer
 from django.utils.text import slugify
 from writeoff.utils import order
 import random
@@ -30,9 +31,9 @@ def editProject(request, slug):
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    data = {}
     serializer = ProjectSerializer(
         instance=project, data=request.data, partial=True)
-    data = {}
     if serializer.is_valid():
         genreName = Genre.objects.get(id=request.data['genre'])
         try:
@@ -50,7 +51,9 @@ def editProject(request, slug):
                 slug = f"{slug}-{randInt}"
                 serializer._validated_data['slug'] = slug
                 serializer.save()
-                return Response({'success': 'slug existed, but was changed to a unique value.'})
+                data["base"] = serializer.data
+                data["genre"] = genreName.name
+                return Response(data=data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -256,6 +259,33 @@ def updateTimelineItemDetailed(request, slug, id):
         project=project).filter(pk=id)[0]
     serializer = TimelineItemSerializer(
         instance=timelineItem, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def getBook(request, slug):
+    try:
+        project = Project.objects.get(slug=slug)
+    except Project.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ProjectContentSerializer(project)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['PUT'])
+def editBook(request, slug):
+    try:
+        project = Project.objects.get(slug=slug)
+    except Project.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ProjectContentSerializer(
+        instance=project, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)

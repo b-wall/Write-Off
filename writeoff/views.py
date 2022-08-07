@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
-from .forms import BookForm, ProjectForm
+from .forms import ProjectForm, CharacterForm
 from .models import Character, User, Project, TimelineItem, Genre
 
 
@@ -65,17 +65,60 @@ def overview(request, slug=None):
 
 def characters(request, slug=None):
     """Display Character Page"""
+    if request.method == 'POST':
+        project = None
+        if slug is not None:
+            try:
+                project = Project.objects.get(slug=slug)
+            except:
+                raise Http404
+        newCharacter = CharacterForm(request.POST, project=project)
+        if newCharacter.is_valid():
+            savedCharacter = newCharacter.save(commit=False)
+            savedCharacter.project = project
+            savedCharacter.save()
+            newCharacter.save_m2m()
+
+        return HttpResponseRedirect(reverse("characters", args=[slug]))
+
     project = None
     if slug is not None:
         try:
             project = Project.objects.get(slug=slug)
             characters = Character.objects.filter(project__slug=slug)
+            newCharacterForm = CharacterForm(project=project)
         except:
             raise Http404
     return render(request, "characters.html", {
         'project': project,
-        'characters': characters
+        'characters': characters,
+        'newCharacterForm': newCharacterForm
     })
+
+
+def characterDelete(request, slug, id):
+    try:
+        project = Project.objects.get(slug=slug)
+        character = Character.objects.get(pk=id)
+    except (Project.DoesNotExist, Character.DoesNotExist):
+        raise Http404
+
+    character.delete()
+    return HttpResponseRedirect(reverse('characters', args=[slug]))
+
+
+def characterEdit(request, slug, id):
+    if request.method == 'POST':
+        try:
+            project = Project.objects.get(slug=slug)
+            character = Character.objects.get(pk=id)
+        except (Project.DoesNotExist, Character.DoesNotExist):
+            raise Http404
+
+        form = CharacterForm(request.POST, instance=character, project=project)
+        form.save()
+
+        return HttpResponseRedirect(reverse('characters', args=[slug]))
 
 # @login_required
 
@@ -100,8 +143,14 @@ def timeline(request, slug=None):
 
 def write(request, slug):
     """Display page to write content"""
-    project = Project.objects.get(slug=slug)
-    return render(request, "write.html", {'form': BookForm(), 'project': project})
+    project = None
+    if slug is not None:
+        try:
+            project = Project.objects.get(slug=slug)
+        except:
+            raise Http404
+
+    return render(request, "write.html", {'project': project})
 
 # @login_required
 

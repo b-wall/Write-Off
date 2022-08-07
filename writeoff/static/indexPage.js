@@ -1,75 +1,78 @@
-const addProject = document.querySelector('.add-project')
-const editBtn = document.querySelectorAll('#edit-project-btn')
-const deleteBtn = document.querySelectorAll('#delete-project-btn')
-const closeBtn = document.querySelectorAll('#close-modal')
-const overlay = document.querySelector('.overlay')
+const addProject = document.querySelector('.add-project');
+const editBtn = document.querySelectorAll('#edit-project-btn');
+const deleteBtn = document.querySelectorAll('#delete-project-btn');
+const closeBtn = document.querySelectorAll('#close-modal');
+const overlay = document.querySelector('.overlay');
 
 // Collapsible Form
 
 addProject.addEventListener('click', () => {
-    projectForm = document.querySelector('.project-form')
-    addProject.classList.toggle('active')
-    projectForm.classList.toggle('active')
+    projectForm = document.querySelector('.project-form');
+    addProject.classList.toggle('active');
+    projectForm.classList.toggle('active');
 });
 
 // Modal Functionality
 
 editBtn.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        e.preventDefault()
-        const modal = document.querySelector('.edit-modal')
-        const card = btn.closest('.project-card')
-        const title = card.querySelector('.card-title').querySelector('h3').innerHTML
-        const titleInput = document.querySelector('#project-title-input')
-        titleInput.value = title
-        openModal(modal)
-        
-        const submitBtn = document.querySelector('#submit-project-update')
-        submitBtn.addEventListener('click', () => {
-            var slug = card.dataset.slug
-            console.log(slug)
-            editProject(slug, card)
-        });
+        e.preventDefault();
+        const modal = document.querySelector('.edit-modal');
+        const card = btn.closest('.project-card');
+        const title = card.querySelector('.card-title').querySelector('h3').innerHTML;
+        const titleInput = document.querySelector('#project-title-input');
+        titleInput.value = title;
+        openModal(modal);
+        const submitBtn = document.querySelector('#submit-project-update');
+        submitBtn.dataset.slug = card.dataset.slug
     });    
+});
+
+// Submit data
+
+document.querySelector('#submit-project-update').addEventListener('click', () => {
+    const slug = document.querySelector('#submit-project-update').dataset.slug;
+    const card = document.querySelector(`.project-card[data-slug="${slug}"]`);
+    editProject(slug, card);
 });
 
 deleteBtn.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        e.preventDefault()
-        const project = btn.closest('.project-card')
-        slug = project.dataset.slug
-        result = confirm("Are you sure you want to delete your project?")
+        e.preventDefault();
+        const project = btn.closest('.project-card');
+        slug = project.dataset.slug;
+        result = confirm("Are you sure you want to delete this project?");
         if (result) {
-            deleteProject(slug)
-            project.style.display = 'none'
+            deleteProject(slug);
+            project.style.display = 'none';
         }
     })
 });
 
 closeBtn.forEach(btn => {
     btn.addEventListener('click', () => {
-        const modal = btn.closest('.edit-modal')
-        closeModal(modal)
+        const modal = btn.closest('.edit-modal');
+        closeModal(modal);
     })
 });
 
 overlay.addEventListener('click', () => {
-    const modals = document.querySelectorAll('.edit-modal.active')
+    const modals = document.querySelectorAll('.edit-modal.active');
     modals.forEach(modal => {
-        closeModal(modal)
+        closeModal(modal);
     })
 });
 
 function openModal(modal) {
     if (modal == null) return
-    overlay.classList.add('active')
-    modal.classList.add('active')
+    overlay.classList.add('active');
+    modal.classList.add('active');
 }
 
 function closeModal(modal) {
     if (modal == null) return
-    overlay.classList.remove('active')
-    modal.classList.remove('active')
+    overlay.classList.remove('active');
+    modal.classList.remove('active');
 }
 
 // Progress Bar animation
@@ -79,7 +82,7 @@ const progressObserver = new IntersectionObserver((obs) => {
         percentage = ob.target.nextElementSibling.nextElementSibling.value + '%'
         if (ob.isIntersecting) {
             ob.target.classList.add('active');
-            ob.target.style.width = percentage
+            ob.target.style.width = percentage;
             progressObserver.unobserve(ob.target);
         }
     })
@@ -120,17 +123,15 @@ function deleteProject(slug) {
             'X-CSRFToken': csrftoken
         }
     })
-        .then(response => response.json())
-        .then(data => console.log(data))
+    .catch(err => console.log(err))
 }
 
 function editProject(slug, card) {
-    const modal = document.querySelector('.edit-modal')
-
-    const title = document.querySelector('#project-title-input').value
-    const genreString = document.querySelector('#project-genre-input').value
-    const genreElement = document.querySelector(`#${genreString}`)
-    const genre = genreElement.dataset.genreId
+    const modal = document.querySelector('.edit-modal');
+    const title = document.querySelector('#project-title-input').value;
+    const genreElement = document.querySelector('#update-genre');
+    const genreId = genreElement.options[genreElement.selectedIndex].dataset.genreId;
+    const genre = genreElement.options[genreElement.selectedIndex].value;
 
     fetch(`/api/project/edit/${slug}/`, {
         method: 'PUT',
@@ -140,12 +141,15 @@ function editProject(slug, card) {
         },
         body: JSON.stringify({
             'title': title,
-            'genre': genre
+            'genre': genreId
         })
     })
         .then(response => response.json())
-        .then(data => card.dataset.slug = data.base.slug)
+        .then(data => {
+            card.dataset.slug = data.base.slug;
+            card.parentElement.setAttribute('href', `/overview/${data.base.slug}`);
+        })
         .then(card.querySelector('.card-title').querySelector('h3').innerHTML = title)
-        .then(card.querySelector('.card-bottom').querySelector('.card-content > p').innerHTML = `Genre: ${genreString}`)
+        .then(card.querySelector('.card-bottom').querySelector('.card-content > p').innerHTML = `Genre: ${genre}`)
         .then(closeModal(modal))
 }

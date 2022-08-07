@@ -4,14 +4,33 @@
 
 {% block body %}
     <div class="project-container character-view-container">
+        <div class="overlay"></div>
+        <div class="timeline-modal">
+            <div class="timeline-modal-container">
+                <form action="" class="timeline-form">
+                    
+                </form>
+            </div>
+        </div>
         <header class="project-header">
             <h1>Characters</h1>
-            <button aria-description="Add a project">+ Character</button>
-            form for new character goes here
+            <div class="project-expand">
+                <button aria-description="Expand Character Form" class="add-project"><svg xmlns="http://www.w3.org/2000/svg" height="48"
+                        width="48">
+                        <path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z" />
+                    </svg></button>
+            </div>
         </header>
+        <div class="character-form-container">
+            <form action="{% url 'characters' project.slug %}" class="character-add-form" method="post">
+                {% csrf_token %}
+                {{ newCharacterForm }}
+                <button aria-description="Add a character" class="add-character-btn">+ Character</button>
+            </form>
+        </div>
         <div class="character-card-container">
             {% for character in characters %}
-                <div class="character-card">
+                <div class="character-card" data-character-id="{{ character.id }}">
                     <div class="character-card-header">
                         <div class="character-img">
                             <svg xmlns="http://www.w3.org/2000/svg" class="largeicon-man" width="70" height="70"
@@ -24,17 +43,23 @@
                         </div>
                         <h2>{{ character.name|title }}</h2>
                         <div class="character-card-buttons">
-                            <a href="#"><svg xmlns="http://www.w3.org/2000/svg" class="icon-edit" viewBox="0 0 20 20" fill="currentColor">
+                            <button class="edit-character-btn btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon-edit" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                                     <path fill-rule="evenodd"
                                         d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
                                         clip-rule="evenodd" />
-                                </svg></a>
-                            <a href="#"><svg xmlns="http://www.w3.org/2000/svg" class="icon-delete" fill="none" viewBox="0 0 24 24"
-                                    stroke="#EE6B6B" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg></a>
+                                </svg>
+                            </button>
+                            <button class="delete-character-btn btn">
+                                <a href="{% url 'characterDelete' project.slug character.id %}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-delete" fill="none" viewBox="0 0 24 24"
+                                        stroke="#EE6B6B" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </a>
+                            </button>
                         </div>
                     </div>
                     <div class="character-expand-button">
@@ -53,17 +78,19 @@
                     </div>
                     <div class="character-card-content">
                         <h3>Age</h3>
-                        <p>{{ character.age }}</p>
+                        <p id="character-age">{{ character.age }}</p>
                         <h3>Personality</h3>
-                        <p>{{ character.personality }}</p>
+                        <p id="character-personality">{{ character.personality }}</p>
                         <h3>Appearance</h3>
-                        <p>{{ character.appearance }}</p>
+                        <p id="character-appearance">{{ character.appearance }}</p>
                         <h3>Affiliations</h3>
-                            {% for affiliation in character.affiliations.all %}
-                                {{ affiliation.name }}
-                            {% endfor %}
+                            <div class="affiliations-container">
+                                {% for affiliation in character.affiliations.all %}
+                                    <span class="character-pill affiliations" data-id="{{ affiliation.id }}">{{ affiliation.name }}</span>
+                                {% endfor %}
+                            </div>
                         <h3>Other</h3>
-                        <p>{{ character.other }}</p>
+                        <p id="character-other">{{ character.other }}</p>
                     </div>
                 </div>
             {% endfor %}

@@ -4,7 +4,7 @@ from .models import User, Genre, Project, Character, TimelineItem
 
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'slug', 'created', 'edited']
+    list_display = ['title', 'id', 'slug', 'created', 'edited']
     search_fields = ['id', 'title']
 
 
