@@ -28,3 +28,10 @@ class ProjectContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ["content"]
+
+
+class ProjectGenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ["genre"]
+        depth = 1

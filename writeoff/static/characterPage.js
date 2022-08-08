@@ -115,9 +115,7 @@ editBtns.forEach(btn => {
         // Redirect Form url
 
         document.querySelector('.character-add-form').action = formAction;
-        console.log(`resetting to ${document.querySelector('.character-add-form').action}`)
         document.querySelector('.character-add-form').action += `edit/${characterId}/`;
-        console.log(`new value is ${document.querySelector('.character-add-form').action}`)
 
         // Change submit button text
 

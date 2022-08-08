@@ -1,10 +1,9 @@
-from functools import partial
 from django.db import IntegrityError, transaction
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from writeoff.models import Project, Character, Genre, TimelineItem
-from .serializers import ProjectContentSerializer, ProjectSerializer, CharacterSerializer, TimelineItemSerializer
+from .serializers import ProjectContentSerializer, ProjectGenreSerializer, ProjectSerializer, CharacterSerializer, TimelineItemSerializer
 from django.utils.text import slugify
 from writeoff.utils import order
 import random
@@ -291,3 +290,32 @@ def editBook(request, slug):
         return Response(serializer.data)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def getGenreStats(request, uid):
+    projects = Project.objects.filter(author_id=uid)
+    genreList = []
+    for project in projects:
+        genreList.append(project.genre)
+    serializer = ProjectGenreSerializer(projects, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getTimelineStats(request, uid):
+    projects = Project.objects.filter(author_id=uid)
+    timelineItems = TimelineItem.objects.filter(project__in=projects)
+    serializer = TimelineItemSerializer(timelineItems, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getCharacterStats(request, uid):
+    projects = Project.objects.filter(author_id=uid)
+    characters = Character.objects.filter(project__in=projects)
+    serializer = CharacterSerializer(characters, many=True)
+
+    return Response(serializer.data)

@@ -163,7 +163,31 @@ def practice(request):
 
 def user_profile(request, uname):
     """View user profile page"""
-    return render(request, "userprofile.html")
+    projects = None
+    projectCount = 0
+    characterCount = 0
+    timelineItemCount = 0
+    totalWordCount = 0
+
+    try:
+        projects = Project.objects.filter(author=request.user)
+        projectCount = Project.objects.filter(author=request.user).count()
+        characterCount = Character.objects.filter(project__in=projects).count()
+        timelineItemCount = TimelineItem.objects.filter(
+            project__in=projects).count()
+        for project in projects:
+            totalWordCount += len(project.content.split())
+    except (Project.DoesNotExist, Character.DoesNotExist, TimelineItem.DoesNotExist):
+        projectCount = 0
+        characterCount = 0
+        timelineItemCount = 0
+        totalWordCount = 0
+    return render(request, "userprofile.html",
+                  {'projectCount': projectCount,
+                   'characterCount': characterCount,
+                   'timelineItemCount': timelineItemCount,
+                   'totalWordCount': totalWordCount
+                   })
 
 
 def stats(request, slug):

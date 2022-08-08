@@ -17,5 +17,8 @@ urlpatterns = [
     path("project/timeline/<slug:slug>/edit/characters/<int:id>/",
          views.handleCharacterSelected),
     path("project/write/<slug:slug>/book/", views.getBook),
-    path("project/write/<slug:slug>/book/edit/", views.editBook)
+    path("project/write/<slug:slug>/book/edit/", views.editBook),
+    path("stats/<int:uid>/genres/", views.getGenreStats),
+    path("stats/<int:uid>/timelines/", views.getTimelineStats),
+    path("stats/<int:uid>/characters/", views.getCharacterStats),
 ]

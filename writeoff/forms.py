@@ -1,5 +1,4 @@
 from django import forms
-from django_quill.forms import QuillFormField
 from .models import Character, Project
 
 # Form to Create a New Project

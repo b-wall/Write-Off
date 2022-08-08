@@ -1,7 +1,98 @@
 {% load static %}
+{% load humanize %}
 
-{% block body %}
-This is the user profile page for
-{{user.username}}
-(id: {{user.id}})
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        {% block title %}
+            Write-Off
+        {% endblock %}
+    </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo&family=Poppins&display=swap" rel="stylesheet">
+    <link href="{% static 'styles.css' %}" rel="stylesheet">
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="{% static 'userPage.js' %}" defer></script>
+</head>
+
+<body>
+    <div class="project-container user-view-container">
+        <header class="user-page-header">
+            <div class="project-nav-logout user-nav-item user-nav-projects">
+                <a href="{% url 'index' %}">Projects</a>
+            </div>
+            <div class="user-page-title">
+                <h1 id="user-profile-text" data-id="{{ user.id }}">{{ user.username|title }}: User Profile</h1>
+            </div>
+            <div class="project-nav-logout user-nav-item">
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+        </header>
+        <div class="user-stats-circle">
+            <div class="card-container user-stats-upper">
+                <div class="content-card user-stats-card">
+                    <h1>{{ projectCount }}</h1>
+                    <h3>Projects Made</h3>
+                </div>
+                <div class="content-card user-stats-card">
+                    <h1>{{ characterCount }}</h1>
+                    <h3>Characters Created</h3>
+                </div>
+                <div class="content-card user-stats-card">
+                    <h1>{{ timelineItemCount }}</h1>
+                    <h3>Timeline Items Forged</h3>
+                </div>
+                <div class="content-card user-stats-card">
+                    <h1>{{ totalWordCount }}</h1>
+                    <h3>Words Written</h3>
+                </div>
+            </div>
+        </div>
+        <div class="user-stats-pie">
+            <canvas id="genre-chart" width="400" height="400"></canvas>
+            <canvas id="timeline-completion-chart" width="400" height="400"></canvas>
+            <canvas id="character-relationship-chart" width="400" height="400"></canvas>
+        </div>
+        <div class="user-stats-circle">
+            <div class="card-container user-stats-upper">
+                <div class="content-card user-stats-card">
+                    <picture>
+                        <img src="{% static 'assets/jazebelle.svg' %}" alt="popular woman">
+                    </picture>
+                    <h3 class="badge-title">Attention Seeker</h3>
+                    <span id="most-popular"></span>
+                </div>
+                <div class="content-card user-stats-card">
+                    <picture>
+                        <img src="{% static 'assets/jia.svg' %}" alt="lonely man">
+                    </picture>
+                    <h3 class="badge-title">Loner</h3>
+                    <span id="least-popular"></span>
+                </div>
+                <div class="content-card user-stats-card">
+                    <picture>
+                        <img src="{% static 'assets/jacques.svg' %}" alt="old man">
+                    </picture>
+                    <h3 class="badge-title">Ancient</h3>
+                    <span id="oldest-character"></span>
+                </div>
+                <div class="content-card user-stats-card">
+                    <picture>
+                        <img src="{% static 'assets/jake.svg' %}" alt="young man">
+                    </picture>
+                    <h3 class="badge-title">Fresh</h3>
+                    <span id="youngest-character"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
