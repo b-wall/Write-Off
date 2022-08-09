@@ -3,14 +3,34 @@ const uid = document.querySelector('#user-profile-text').dataset.id;
 const genreChart = document.getElementById('genre-chart');
 const timelineCompletionChart = document.getElementById('timeline-completion-chart');
 const characterRelationshipChart = document.getElementById('character-relationship-chart');
+const characterBreakdownChart = document.getElementById('character-breakdown-chart');
+
+// Fetch Data
 
 getGenreData(uid);
 
 getTimelineCompletionData(uid);
 
-getCharacterRealtionshipData(uid);
 
-// Fetch Data
+getCharacterBreakdownData(uid);
+
+// Intersection Observer for Affiliation Bar Chart
+const chartObserver = new IntersectionObserver((obs) => {
+    obs.forEach(ob => {
+        if (ob.isIntersecting) {
+            getCharacterRelationshipData(uid);
+            chartObserver.unobserve(ob.target);
+        }
+    })
+}, {
+    threshold: 0.9,
+})
+
+const characterChart = document.querySelector('.character-chart-container');
+chartObserver.observe(characterChart);
+
+
+// Fetch Data Functions
 
 function getGenreData(uid) {
         fetch(`/api/stats/${uid}/genres/`, {
@@ -33,22 +53,28 @@ function getGenreData(uid) {
                     data: {
                         labels: Object.keys(labels),
                         datasets: [{
-                            label: 'Project Genres',
                             data: Object.values(labels),
                             backgroundColor: [
                             'rgb(255, 99, 132)',
                             'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
+                            'rgb(255, 205, 86)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
                             ],
                             hoverOffset: 4
                         }]
                         },
                     options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                        responsive: true,
+                        plugins: {
+                            labels: {
+                                render: 'percentage',
+                                fontSize: 18,
+                                fontColor: '#fff',
+                                textShadow: true,
                             }
-                        }
+                        },                        
                     }
                 });
             })
@@ -85,25 +111,83 @@ function getTimelineCompletionData(uid) {
                             backgroundColor: [
                             'rgb(255, 99, 132)',
                             'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
+                            'rgb(255, 205, 86)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
                             ],
                             hoverOffset: 4
                         }]
                     },
                     options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            labels: {
+                                render: 'percentage',
+                                fontSize: 32,
+                                fontColor: '#fff',
+                                textShadow: true,
                             }
-                        }
+                        },
                     }
                 });
             })
             
             .catch(err => console.log(err))
 }
+
+function getCharacterBreakdownData(uid) {
+    fetch(`/api/stats/${uid}/characters/count/`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json',
+            'X-CSRFToken': csrftoken
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            const labels = {}
+            data.forEach(item => {
+                    labels[item.project] = (labels[item.project] || 0) + 1;
+                })
+            const newCharacterBreakdownChart = new Chart(characterBreakdownChart, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(labels),
+                    datasets: [{
+                        label: 'Timeline Item Completion',
+                        data: Object.values(labels),
+                        backgroundColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        labels: {
+                            render: 'value',
+                            fontSize: 32,
+                            fontColor: '#fff',
+                            textShadow: true,
+                        }
+                    },
+                }
+            });
+        })
+        .catch(err => console.log(err))
+}
     
-function getCharacterRealtionshipData(uid) {
+function getCharacterRelationshipData(uid) {
         fetch(`/api/stats/${uid}/characters/`, {
             method: 'GET',
             headers: {
@@ -118,19 +202,19 @@ function getCharacterRealtionshipData(uid) {
                 const characterData = []
                 let mostPopular = {
                     name: '',
-                    affiliations: 0
+                    affiliations: -Infinity
                 }
                 let leastPopular = {
                     name: '',
-                    affiliations: 0
+                    affiliations: Infinity
                 }
                 let oldest = {
                     name: '',
-                    age: 0
+                    age: -Infinity
                 }
                 let youngest = {
                     name: '',
-                    age: 0
+                    age: Infinity
                 }
                 
                 data.forEach(item => {
@@ -142,7 +226,7 @@ function getCharacterRealtionshipData(uid) {
                         age: item.age
                     });
                 });
-                console.log(characterData)
+
                 characterData.forEach(character => {
                     if (mostPopular.affiliations <= character.affiliations) {
                         mostPopular.affiliations = character.affiliations;
@@ -156,27 +240,21 @@ function getCharacterRealtionshipData(uid) {
                         oldest.age = character.age;
                         oldest.name = character.name;
                     }
-                    if (youngest.age >= character.age) {
-                        youngest.age = character.age;
-                        youngest.name = character.name;
+
+                    if (character.age !== null) {
+                        if (youngest.age >= character.age) {
+                            youngest.age = character.age;
+                            youngest.name = character.name;
+                        }
                     }
                 })
-                if (youngest.age == null) {
-                    youngest.age = 0;
-                }
+                
+                document.querySelector('#most-popular').textContent = `${mostPopular.name ? mostPopular.name : '???'} has the most friends`
+                document.querySelector('#least-popular').textContent = `${leastPopular.name ? leastPopular.name : '???'} is (one of) the loneliest`
+                document.querySelector('#oldest-character').textContent = `${oldest.name ? oldest.name : '???'} is the oldest (and wisest)`
+                document.querySelector('#youngest-character').textContent = `${youngest.name ? youngest.name : '???'} is the youngest`
 
-                if (oldest.age == null) {
-                    oldest.age == 0;
-                }
-
-                console.log(oldest)
-                console.log(youngest)
-
-                document.querySelector('#most-popular').textContent = `${mostPopular.name} has the most friends`
-                document.querySelector('#least-popular').textContent = `${leastPopular.name} is (one of) the loneliest.`
-                document.querySelector('#oldest-character').textContent = `${oldest.name} is the oldest (and wisest).`
-                document.querySelector('#youngest-character').textContent = `${youngest.name} is the most naiive to this world.`
-
+                let delayed;
                 const newCharacterReationshipChart = new Chart(characterRelationshipChart, {
                     type: 'bar',
                     data: {
@@ -185,28 +263,55 @@ function getCharacterRealtionshipData(uid) {
                             label: 'Number of Affiliations',
                             data: characterAffiliations,
                             backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
                                 'rgba(255, 99, 132, 1)',
                                 'rgba(54, 162, 235, 1)',
                                 'rgba(255, 206, 86, 1)',
                                 'rgba(75, 192, 192, 1)',
                                 'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
+                                'rgba(255, 159, 64, 1)',
                             ],
-                            borderWidth: 1
                         }]
                     },
                     options: {
+                        layout: {
+                            padding: {
+                                top: 25
+                            }
+                        },
+                        maintainAspectRatio: false,
+                        animation: {
+                            onComplete: () => {
+                                delayed = true;
+                            },
+                            delay: (context) => {
+                                let delay = 0;
+                                if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                                delay = context.dataIndex * 300 + context.datasetIndex * 100;
+                                }
+                                return delay;
+                            },
+                        },
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                            labels: {
+                                render: 'value',
+                                fontSize: 22,
+                            }
+                        },
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
                             }
                         }
                     }

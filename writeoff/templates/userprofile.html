@@ -19,6 +19,8 @@
     <link href="{% static 'styles.css' %}" rel="stylesheet">
     <!-- Chart JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <!-- Chart.js Labels Plugin -->
+    <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js" defer></script>
     <script src="{% static 'userPage.js' %}" defer></script>
 </head>
 
@@ -29,7 +31,7 @@
                 <a href="{% url 'index' %}">Projects</a>
             </div>
             <div class="user-page-title">
-                <h1 id="user-profile-text" data-id="{{ user.id }}">{{ user.username|title }}: User Profile</h1>
+                <h1 id="user-profile-text" data-id="{{ user.id }}">{{ user.username|title }}: User Profile<span class="user-created">Member since {{ user.date_joined|date:"jS F o"}}</span></h1>
             </div>
             <div class="project-nav-logout user-nav-item">
                 <a href="{% url 'logout' %}">Logout</a>
@@ -55,13 +57,26 @@
                 </div>
             </div>
         </div>
-        <div class="user-stats-pie">
-            <canvas id="genre-chart" width="400" height="400"></canvas>
-            <canvas id="timeline-completion-chart" width="400" height="400"></canvas>
-            <canvas id="character-relationship-chart" width="400" height="400"></canvas>
+        <div class="user-stats-graphs-container">
+            <div class="genre-chart-container chart">
+                <h3 class="chart-heading">Your Project Genres</h3>
+                <canvas id="genre-chart" height="400"></canvas>
+            </div>
+            <div class="timeline-chart-container chart">
+                <h3 class="chart-heading">Timeline Completion</h3>
+                <canvas id="timeline-completion-chart" height="400"></canvas>
+            </div>
+            <div class="character-breakdown-chart-container chart">
+                <h3 class="chart-heading">Project Characters</h3>
+                <canvas id="character-breakdown-chart" height="400"></canvas>
+            </div>
         </div>
-        <div class="user-stats-circle">
-            <div class="card-container user-stats-upper">
+        <div class="character-chart-container">
+            <h3 class="chart-heading">Character Affiliations</h3>
+            <canvas id="character-relationship-chart"></canvas>
+        </div>
+        <div class="user-stats-circle bottom-stats">
+            <div class="card-container user-stats-lower">
                 <div class="content-card user-stats-card">
                     <picture>
                         <img src="{% static 'assets/jazebelle.svg' %}" alt="popular woman">

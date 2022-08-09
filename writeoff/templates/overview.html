@@ -24,6 +24,9 @@
     <div class="project-container">
         <header class="project-header">
             <div class="project-nav">
+                <div class="project-nav-logout user-nav-item user-nav-projects">
+                    <a href="{% url 'index' %}">Projects</a>
+                </div>
                 <div class="project-nav-title">
                     <h1>{{project.title|title}}: Overview</h1>
                 </div>

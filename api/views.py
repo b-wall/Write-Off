@@ -319,3 +319,12 @@ def getCharacterStats(request, uid):
     serializer = CharacterSerializer(characters, many=True)
 
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getCharacterNumber(request, uid):
+    projects = Project.objects.filter(author_id=uid)
+    characters = Character.objects.filter(project__in=projects)
+    serializer = CharacterSerializer(characters, many=True)
+
+    return Response(serializer.data)

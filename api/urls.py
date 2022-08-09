@@ -21,4 +21,5 @@ urlpatterns = [
     path("stats/<int:uid>/genres/", views.getGenreStats),
     path("stats/<int:uid>/timelines/", views.getTimelineStats),
     path("stats/<int:uid>/characters/", views.getCharacterStats),
+    path("stats/<int:uid>/characters/count/", views.getCharacterNumber),
 ]

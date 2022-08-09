@@ -9,6 +9,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class CharacterSerializer(serializers.ModelSerializer):
+    project = serializers.StringRelatedField()
+
     class Meta:
         model = Character
         fields = '__all__'
