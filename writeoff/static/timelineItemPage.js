@@ -38,7 +38,22 @@ document.querySelector('#close-timeline-modal').addEventListener('click', (e) =>
     })
 });
 
+// Delete Timeline Item from Modal
 
+document.querySelector('#timeline-modal-delete').addEventListener('click', (e) => {
+    e.preventDefault();
+    const check = confirm('Are you sure you want to delete?')
+        if (check) {
+            const tid = document.querySelector('#timeline-title').dataset.tid;
+            TimelineAPI.deleteItem(slug, tid);
+            const timelineItem = document.querySelector(`[data-id="${tid}"]`);
+            timelineItem.parentElement.removeChild(timelineItem);
+            const modals = document.querySelectorAll('.timeline-modal.active');
+            modals.forEach(modal => {
+                Modal.closeModal(modal);
+            })
+        }
+});
 
 // Popup Functionality
 

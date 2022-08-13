@@ -15,7 +15,5 @@ urlpatterns = [
          views.characterEdit, name='characterEdit'),
     path("timeline/<slug:slug>/", views.timeline, name='timeline'),
     path("write/<slug:slug>/", views.write, name='write'),
-    path("practice/", views.practice, name='practice'),
     path("user/<str:uname>/", views.user_profile, name='profile'),
-    path("stats/<slug:slug>/", views.stats, name='stats'),
 ]

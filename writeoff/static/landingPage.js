@@ -7,9 +7,13 @@ const fadeObserver = new IntersectionObserver((obs) => {
         }
     })
 }, {
-    threshold: 0.3,
-})
+    threshold: 0.5,
+});
 
 document.querySelectorAll('.fade-in').forEach(el => {
     fadeObserver.observe(el);
-})
+});
+
+document.querySelectorAll('.user-stats-landing-card').forEach(el => {
+    fadeObserver.observe(el);
+});

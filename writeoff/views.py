@@ -10,7 +10,7 @@ from .forms import ProjectForm, CharacterForm
 from .models import Character, User, Project, TimelineItem, Genre
 
 
-# @login_required
+@login_required
 def index(request):
     """Display Project List"""
     if request.method == "POST":
@@ -44,7 +44,21 @@ def index(request):
 
 def landingpage(request):
     """Display landing page"""
-    return render(request, "landing.html")
+    totalWordsWritten = 0
+    # Total Stats for all users
+    projects = Project.objects.all()
+    totalProjects = projects.count()
+    totalCharacters = Character.objects.all().count()
+    totalTimelineItems = TimelineItem.objects.all().count()
+    for project in projects:
+        totalWordsWritten += len(project.content.split())
+
+    return render(request, "landing.html", {
+        'totalProjects': totalProjects,
+        'totalCharacters': totalCharacters,
+        'totalTimelineItems': totalTimelineItems,
+        'totalWordsWritten': totalWordsWritten
+    })
 
 
 def overview(request, slug=None):
@@ -60,9 +74,8 @@ def overview(request, slug=None):
         'project': project
     })
 
-# @login_required
 
-
+@login_required
 def characters(request, slug=None):
     """Display Character Page"""
     if request.method == 'POST':
@@ -120,9 +133,8 @@ def characterEdit(request, slug, id):
 
         return HttpResponseRedirect(reverse('characters', args=[slug]))
 
-# @login_required
 
-
+@login_required
 def timeline(request, slug=None):
     """Display Timeline View"""
     project = None
@@ -138,9 +150,8 @@ def timeline(request, slug=None):
         'timelineItems': timelineItems
     })
 
-# @login_required
 
-
+@login_required
 def write(request, slug):
     """Display page to write content"""
     project = None
@@ -152,15 +163,8 @@ def write(request, slug):
 
     return render(request, "write.html", {'project': project})
 
-# @login_required
 
-
-def practice(request):
-    """Allow user to practice writing"""
-    return render(request, "practice.html", {
-    })
-
-
+@login_required
 def user_profile(request, uname):
     """View user profile page"""
     projects = None
@@ -188,15 +192,6 @@ def user_profile(request, uname):
                    'timelineItemCount': timelineItemCount,
                    'totalWordCount': totalWordCount
                    })
-
-
-def stats(request, slug):
-    """View project stats"""
-
-    project = Project.objects.get(slug=slug)
-    return render(request, "stats.html", {
-        'project': project
-    })
 
 
 def register(request):
@@ -229,6 +224,9 @@ def register(request):
 
 def login_view(request):
     """Display login page"""
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('index'))
     if request.method == "POST":
 
         # Log user in
@@ -240,7 +238,7 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render("login.html", {
+            return render(request, "login.html", {
                 "message": "Invalid username/password"
             })
     return render(request, "login.html")
