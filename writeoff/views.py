@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.core.exceptions import PermissionDenied
 
 from .forms import ProjectForm, CharacterForm
 from .models import Character, User, Project, TimelineItem, Genre
@@ -69,7 +70,9 @@ def overview(request, slug=None):
             project = Project.objects.get(slug=slug)
         except:
             raise Http404
-
+    # Ensure only logged in user can see their projects
+    if project.author != request.user:
+        raise PermissionDenied
     return render(request, "overview.html", {
         'project': project
     })
@@ -102,6 +105,11 @@ def characters(request, slug=None):
             newCharacterForm = CharacterForm(project=project)
         except:
             raise Http404
+
+    # Ensure only logged in user can see their projects
+    if project.author != request.user:
+        raise PermissionDenied
+
     return render(request, "characters.html", {
         'project': project,
         'characters': characters,
@@ -144,6 +152,9 @@ def timeline(request, slug=None):
             timelineItems = TimelineItem.objects.filter(project__slug=slug)
         except:
             raise Http404
+    # Ensure only logged in user can see their projects
+    if project.author != request.user:
+        raise PermissionDenied
 
     return render(request, "timeline.html", {
         'project': project,
@@ -160,6 +171,9 @@ def write(request, slug):
             project = Project.objects.get(slug=slug)
         except:
             raise Http404
+    # Ensure only logged in user can see their projects
+    if project.author != request.user:
+        raise PermissionDenied
 
     return render(request, "write.html", {'project': project})
 
@@ -175,6 +189,7 @@ def user_profile(request, uname):
 
     try:
         projects = Project.objects.filter(author=request.user)
+        print(projects)
         projectCount = Project.objects.filter(author=request.user).count()
         characterCount = Character.objects.filter(project__in=projects).count()
         timelineItemCount = TimelineItem.objects.filter(
@@ -186,6 +201,7 @@ def user_profile(request, uname):
         characterCount = 0
         timelineItemCount = 0
         totalWordCount = 0
+
     return render(request, "userprofile.html",
                   {'projectCount': projectCount,
                    'characterCount': characterCount,
@@ -233,6 +249,8 @@ def login_view(request):
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
+
+        # Check if user is already logged in on another account
 
         if user is not None:
             login(request, user)

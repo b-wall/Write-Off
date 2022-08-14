@@ -55,7 +55,8 @@ body {
   margin-left: 1.5rem;
   font-family: "Arvo", serif;
   letter-spacing: 0.3rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  user-select: none;
   padding-bottom: 1.5rem;
   cursor: default;
 }
@@ -76,7 +77,7 @@ body {
 }
 
 .sidebar-item ul li a:hover:not(.nav-logo) {
-  color: rgb(169, 58, 58, 0.9);
+  color: #2a7c7a;
 }
 
 .sidebar-item ul li a svg {
@@ -119,12 +120,20 @@ body {
 }
 
 #logout-btn-expanded svg {
-  margin: 0;
-  transform: translateX(-7px);
+  margin-right: 10px;
+  transform: translateX(3px);
+}
+
+#profile-icon {
+  margin-right: 10px;
 }
 
 #logout-btn-expanded:hover > .icon-tabler-logout {
-  stroke: rgb(169, 58, 58, 0.9);
+  stroke: #2a7c7a;
+}
+
+#logout-btn-contracted:hover > .icon-tabler-logout {
+  stroke: #2a7c7a;
 }
 
 /* Sidebar collapsed */
@@ -643,7 +652,7 @@ select {
 
 .project-container h1 {
   font-family: "Arvo", serif;
-  letter-spacing: 0.4rem;
+  letter-spacing: 0.1rem;
 }
 
 .project-header {
@@ -983,6 +992,7 @@ select {
 /* Character creation page */
 
 .character-view-container {
+  width: 80%;
   margin-left: 275px;
 }
 
@@ -1095,7 +1105,7 @@ select {
 }
 
 .character-form-container {
-  max-width: 60vw;
+  width: 90%;
   position: relative;
   max-height: 0;
   overflow: hidden;
@@ -1105,6 +1115,10 @@ select {
 .character-form-container.active {
   max-height: 1000px;
   overflow: auto;
+}
+
+#character-age {
+  font-size: 1.5rem;
 }
 
 .character-add-form {
@@ -1224,15 +1238,18 @@ textarea:focus-visible {
 
 /* Character Mobile Page */
 
-@media screen and (max-width: 981px) {
-  .character-card {
-    width: 20em;
-  }
-}
-
 @media screen and (max-width: 711px) {
   .character-card {
     width: 100%;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .character-img {
+    display: none;
+  }
+  .character-card-header {
+    flex-direction: column;
   }
 }
 
@@ -1608,6 +1625,7 @@ textarea:focus-visible {
 .content-container h1 {
   font-family: "Arvo", serif;
   margin: 1rem 0;
+  letter-spacing: 0.1rem;
 }
 
 .column-container {
@@ -2117,7 +2135,8 @@ textarea:focus-visible {
 }
 
 .user-stats-upper {
-  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .user-stats-card h1 {
@@ -2196,6 +2215,31 @@ textarea:focus-visible {
 
 .badge-title {
   font-family: "Arvo", serif;
+}
+
+/* User Stats Page Mobile */
+
+@media screen and (max-width: 934px) {
+  .user-stats-graphs-container {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 1119px) {
+  .user-stats-upper {
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    column-gap: 10vw;
+  }
+}
+
+@media screen and (max-width: 756px) {
+  .user-stats-upper {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 /* Overview Page */

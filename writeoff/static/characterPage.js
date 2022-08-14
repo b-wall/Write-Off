@@ -77,7 +77,7 @@ editBtns.forEach(btn => {
         let affiliationsList = []
 
         const name = btn.parentElement.parentElement.querySelector('h2').textContent;
-        const age = btn.closest('.character-card').querySelector('#character-age').textContent;
+        const age = btn.closest('.character-card').querySelector('#character-age').textContent.trim();
         const personality = btn.closest('.character-card').querySelector('#character-personality').textContent;
         const appearance = btn.closest('.character-card').querySelector('#character-appearance').textContent;
         const other = btn.closest('.character-card').querySelector('#character-other').textContent;
@@ -96,7 +96,7 @@ editBtns.forEach(btn => {
         // Add in current values
 
         nameInput.value = name;
-        age ? ageInput.value : null;
+        age ? ageInput.value = age : null;
         personalityInput.value = personality;
         appearanceInput.value = appearance;
         otherInput.value = other;

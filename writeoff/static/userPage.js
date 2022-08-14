@@ -5,16 +5,8 @@ const timelineCompletionChart = document.getElementById('timeline-completion-cha
 const characterRelationshipChart = document.getElementById('character-relationship-chart');
 const characterBreakdownChart = document.getElementById('character-breakdown-chart');
 
-// Fetch Data
 
-getGenreData(uid);
-
-getTimelineCompletionData(uid);
-
-
-getCharacterBreakdownData(uid);
-
-// Intersection Observer for Affiliation Bar Chart
+// If Intersecting, trigger API Call and Display Data
 const chartObserver = new IntersectionObserver((obs) => {
     obs.forEach(ob => {
         if (ob.isIntersecting) {
@@ -26,7 +18,23 @@ const chartObserver = new IntersectionObserver((obs) => {
     threshold: 0.9,
 })
 
+const circleChartObserver = new IntersectionObserver((obs) => {
+    obs.forEach(ob => {
+        if (ob.isIntersecting) {
+            getGenreData(uid);
+            getTimelineCompletionData(uid);
+            getCharacterBreakdownData(uid);
+            circleChartObserver.unobserve(ob.target);
+        }
+    })
+}, {
+    threshold: 0.3,
+})
+
+const circleCharts = document.querySelector('.user-stats-graphs-container');
 const characterChart = document.querySelector('.character-chart-container');
+
+circleChartObserver.observe(circleCharts);
 chartObserver.observe(characterChart);
 
 
@@ -226,7 +234,7 @@ function getCharacterRelationshipData(uid) {
                         age: item.age
                     });
                 });
-
+                console.log(characterData)
                 characterData.forEach(character => {
                     if (mostPopular.affiliations <= character.affiliations) {
                         mostPopular.affiliations = character.affiliations;

@@ -13,7 +13,7 @@
             </div>
         </div>
         <header class="project-header">
-            <h1>Characters</h1>
+            <h1>Characters - {{ project.title|title }}</h1>
             <div class="project-expand">
                 <button aria-description="Expand Character Form" class="add-project"><svg xmlns="http://www.w3.org/2000/svg" height="48"
                         width="48">
@@ -78,7 +78,13 @@
                     </div>
                     <div class="character-card-content">
                         <h3>Age</h3>
-                        <p id="character-age">{{ character.age }}</p>
+                        <p id="character-age">
+                            {% if character.age == None %}
+                                Unknown
+                            {% else %}
+                                {{ character.age }}
+                            {% endif %}
+                        </p>
                         <h3>Personality</h3>
                         <p id="character-personality">{{ character.personality }}</p>
                         <h3>Appearance</h3>
