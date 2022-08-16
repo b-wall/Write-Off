@@ -19,6 +19,12 @@ def getProjects(request):
     except Project.DoesNotExist:
         data['info'] = 'no projects found'
         return Response(data=data)
+
+    # Ensure only the user can get the data
+    for project in projects:
+        if project.author != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     serializer = ProjectSerializer(projects, many=True)
     return Response(serializer.data)
 
@@ -29,6 +35,10 @@ def editProject(request, slug):
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Ensure only the owner of the project can edit it
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     data = {}
     serializer = ProjectSerializer(
@@ -63,6 +73,10 @@ def deleteProject(request, slug):
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Ensure only the owner of the project can delete it
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     process = project.delete()
     data = {}
     if process:
@@ -81,6 +95,11 @@ def getTimelineItems(request, slug, cid):
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Ensure only the owner of the project can view it
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     if cid == 1:
         timelineItems = TimelineItem.objects.filter(
             project=project).filter(columnId=cid).order_by('beginningOrder')
@@ -101,6 +120,10 @@ def getTimelineItem(request, slug, id):
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Ensure only the owner of the project can view it
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     timelineItem = TimelineItem.objects.filter(
         project=project).filter(pk=id)[0]
     serializer = TimelineItemSerializer(timelineItem)
@@ -113,6 +136,10 @@ def updateTimelineItem(request, slug, id):
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Ensure only the owner of the project can update it
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     timelineItem = TimelineItem.objects.filter(
         project=project).filter(pk=id)[0]
@@ -146,6 +173,10 @@ def createTimelineItem(request, slug):
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Ensure only the owner of the project can create an item
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     timelineItem = TimelineItem(project=project)
 
     serializer = TimelineItemSerializer(timelineItem, data=request.data)
@@ -172,6 +203,11 @@ def deleteTimelineItem(request, slug, id):
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Ensure only the owner of the project can delete it
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     timelineItem = TimelineItem.objects.filter(
         project=project).filter(pk=id)[0]
     process = timelineItem.delete()
@@ -189,6 +225,10 @@ def getTimelineCharacters(request, slug, id):
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Ensure only the owner of the project can view characters
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     projectCharacters = Character.objects.filter(project=project)
     timelineItem = TimelineItem.objects.filter(
@@ -223,9 +263,14 @@ def getTimelineCharacters(request, slug, id):
 @api_view(['PUT'])
 def handleCharacterSelected(request, slug, id):
     try:
+        project = Project.objects.get(slug=slug)
         character = Character.objects.get(pk=id)
     except Character.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Ensure only the owner of the project can edit characters
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     serializer = TimelineItemSerializer(
         instance=character, data=request.data, partial=True)
@@ -254,6 +299,10 @@ def updateTimelineItemDetailed(request, slug, id):
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Ensure only the owner of the project can view characters
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     timelineItem = TimelineItem.objects.filter(
         project=project).filter(pk=id)[0]
     serializer = TimelineItemSerializer(
@@ -272,6 +321,10 @@ def getBook(request, slug):
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Ensure only the owner of the project can view their book
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     serializer = ProjectContentSerializer(project)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -282,6 +335,10 @@ def editBook(request, slug):
         project = Project.objects.get(slug=slug)
     except Project.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # Ensure only the owner of the project can edit their book
+    if project.author != request.user:
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     serializer = ProjectContentSerializer(
         instance=project, data=request.data, partial=True)
@@ -295,7 +352,14 @@ def editBook(request, slug):
 @api_view(['GET'])
 def getGenreStats(request, uid):
     projects = Project.objects.filter(author_id=uid)
+
+    # Ensure only the owner of the projects can see their stats
+    for project in projects:
+        if project.author != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     genreList = []
+
     for project in projects:
         genreList.append(project.genre)
     serializer = ProjectGenreSerializer(projects, many=True)
@@ -306,6 +370,12 @@ def getGenreStats(request, uid):
 @api_view(['GET'])
 def getTimelineStats(request, uid):
     projects = Project.objects.filter(author_id=uid)
+
+    # Ensure only the owner of the projects can see their stats
+    for project in projects:
+        if project.author != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     timelineItems = TimelineItem.objects.filter(project__in=projects)
     serializer = TimelineItemSerializer(timelineItems, many=True)
 
@@ -315,6 +385,12 @@ def getTimelineStats(request, uid):
 @api_view(['GET'])
 def getCharacterStats(request, uid):
     projects = Project.objects.filter(author_id=uid)
+
+    # Ensure only the owner of the projects can see their stats
+    for project in projects:
+        if project.author != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     characters = Character.objects.filter(project__in=projects)
     serializer = CharacterSerializer(characters, many=True)
 
@@ -324,6 +400,12 @@ def getCharacterStats(request, uid):
 @api_view(['GET'])
 def getCharacterNumber(request, uid):
     projects = Project.objects.filter(author_id=uid)
+
+    # Ensure only the owner of the projects can see their stats
+    for project in projects:
+        if project.author != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
     characters = Character.objects.filter(project__in=projects)
     serializer = CharacterSerializer(characters, many=True)
 

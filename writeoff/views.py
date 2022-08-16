@@ -28,8 +28,9 @@ def index(request):
     for project in projects:
         # Check if project has been completed
         if project.progress() == 100:
-            project.completed = True
-            project.save()
+            if project.completed != True:
+                project.completed = True
+                project.save()
 
         if project.completed == True:
             if project.progress() < 100:
@@ -51,6 +52,7 @@ def landingpage(request):
     totalProjects = projects.count()
     totalCharacters = Character.objects.all().count()
     totalTimelineItems = TimelineItem.objects.all().count()
+
     for project in projects:
         totalWordsWritten += len(project.content.split())
 
@@ -117,12 +119,17 @@ def characters(request, slug=None):
     })
 
 
+@login_required
 def characterDelete(request, slug, id):
     try:
         project = Project.objects.get(slug=slug)
         character = Character.objects.get(pk=id)
     except (Project.DoesNotExist, Character.DoesNotExist):
         raise Http404
+
+    # Ensure only logged in user can delete
+    if project.author != request.user:
+        raise PermissionDenied
 
     character.delete()
     return HttpResponseRedirect(reverse('characters', args=[slug]))
@@ -135,6 +142,10 @@ def characterEdit(request, slug, id):
             character = Character.objects.get(pk=id)
         except (Project.DoesNotExist, Character.DoesNotExist):
             raise Http404
+
+        # Ensure only logged in user can edit
+        if project.author != request.user:
+            raise PermissionDenied
 
         form = CharacterForm(request.POST, instance=character, project=project)
         form.save()
@@ -189,7 +200,6 @@ def user_profile(request, uname):
 
     try:
         projects = Project.objects.filter(author=request.user)
-        print(projects)
         projectCount = Project.objects.filter(author=request.user).count()
         characterCount = Character.objects.filter(project__in=projects).count()
         timelineItemCount = TimelineItem.objects.filter(

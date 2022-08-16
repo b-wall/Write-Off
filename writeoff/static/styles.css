@@ -1,3 +1,15 @@
+/* Local Fonts */
+
+@font-face {
+  font-family: "Poppins";
+  src: url(./fonts/Poppins/Poppins-Regular.ttf);
+}
+
+@font-face {
+  font-family: "Arvo";
+  src: url(./fonts/Arvo/Arvo-Regular.ttf);
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -1236,6 +1248,10 @@ textarea:focus-visible {
   transform: scale(1.1);
 }
 
+.character-title {
+  text-align: center;
+}
+
 /* Character Mobile Page */
 
 @media screen and (max-width: 711px) {
@@ -1250,6 +1266,11 @@ textarea:focus-visible {
   }
   .character-card-header {
     flex-direction: column;
+  }
+
+  .character-title {
+    font-size: 1.2rem;
+    text-align: center;
   }
 }
 

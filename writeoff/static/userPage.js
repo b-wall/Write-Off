@@ -259,7 +259,7 @@ function getCharacterRelationshipData(uid) {
                 
                 document.querySelector('#most-popular').textContent = `${mostPopular.name ? mostPopular.name : '???'} has the most friends`
                 document.querySelector('#least-popular').textContent = `${leastPopular.name ? leastPopular.name : '???'} is (one of) the loneliest`
-                document.querySelector('#oldest-character').textContent = `${oldest.name ? oldest.name : '???'} is the oldest (and wisest)`
+                document.querySelector('#oldest-character').textContent = `${oldest.name ? oldest.name : '???'} is the oldest`
                 document.querySelector('#youngest-character').textContent = `${youngest.name ? youngest.name : '???'} is the youngest`
 
                 let delayed;
