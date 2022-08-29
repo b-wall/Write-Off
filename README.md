@@ -283,3 +283,19 @@ The project is split into two apps:
    password: tryitout
    ```
    Or create an account on the registration page.
+
+---
+
+## Future Improvements
+
+- **Practice:** I originally had plans for a practice page, where writers could receive a daily writer's prompt and write a short story to the response. The more I thought about it, the bigger the features I wanted i.e:
+
+  - Ability to submit prompts
+  - Feature to score others' writing prompts
+  - Check your scores/streak for your writing prompt short stories.
+
+  And more. This feature may well be suited to its own web app!
+
+- **Individual project stats:** I would like to add an individual stats page for each project, akin to the overall stats page currently implemented.
+
+- **Accessiblity:** _Write-Off_ was made with accessibility in mind, but time constraints meant that I could not fully implement complete accessibility across every page. I would like to finish the accessibility (including tabbing) in the future.
