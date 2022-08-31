@@ -223,27 +223,31 @@ def user_profile(request, uname):
 def register(request):
     """Allow user to register an account"""
     if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
+        # Disable registration for deployed demo project
+        return render(request, "register.html", {
+            "message": "Registration disabled for demo website. Please check the github for login details."
+        })
+        # username = request.POST['username']
+        # email = request.POST['email']
 
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "register.html", {
-                "message": "Error: passwords must match"
-            })
+        # # Ensure password matches confirmation
+        # password = request.POST["password"]
+        # confirmation = request.POST["confirmation"]
+        # if password != confirmation:
+        #     return render(request, "register.html", {
+        #         "message": "Error: passwords must match"
+        #     })
 
-        # Create new user
-        try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return render(request, "register.html", {
-                "message": "Username unavailable"
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        # # Create new user
+        # try:
+        #     user = User.objects.create_user(username, email, password)
+        #     user.save()
+        # except IntegrityError:
+        #     return render(request, "register.html", {
+        #         "message": "Username unavailable"
+        #     })
+        # login(request, user)
+        # return HttpResponseRedirect(reverse("index"))
 
     return render(request, "register.html")
 
