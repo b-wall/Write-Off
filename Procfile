@@ -1,1 +1,1 @@
-web: gunicorn write-off.wsgi --log-file -
+web: gunicorn capstone.wsgi --log-file -
