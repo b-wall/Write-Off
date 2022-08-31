@@ -299,3 +299,5 @@ The project is split into two apps:
 - **Individual project stats:** I would like to add an individual stats page for each project, akin to the overall stats page currently implemented.
 
 - **Accessiblity:** _Write-Off_ was made with accessibility in mind, but time constraints meant that I could not fully implement complete accessibility across every page. I would like to finish the accessibility (including tabbing) in the future.
+
+- **Optimisation** Things such as minifying CSS, compressing and optimizing images, caching certain items etc.
