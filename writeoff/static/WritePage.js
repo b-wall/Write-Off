@@ -1,8 +1,6 @@
 import getCookie from "./cookie.js";
 const csrftoken = getCookie('csrftoken');
 
-// Write Page: Scroll to top or bottom of document on click
-
 document.querySelector('#scroll-top-btn').addEventListener('click', (e) => {
     e.preventDefault();
     const textBox = document.querySelector('#book-content')
