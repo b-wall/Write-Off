@@ -1,5 +1,16 @@
 # Write-Off
 
+## Live Site
+
+Visit the live demo website at https://write-off.herokuapp.com
+
+Login using the below credentials:
+
+```
+username: demo
+password: tryitout
+```
+
 ## Screenshots
 
 ### Project Page
